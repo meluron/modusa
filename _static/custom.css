@@ -1,0 +1,195 @@
+img.sidebar-logo {
+    max-width: 150px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+
+.sidebar-brand-text {
+    display: none !important;
+}
+
+/* Entire field list (wraps Parameters/Returns block) */
+dl.field-list {
+    background: #1e1e2e;
+    border: 1px solid #737395;
+    border-radius: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+/* Each section title like 'Parameters', 'Returns', etc. */
+dl.field-list dt {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0;
+    padding: 0.2rem 0.4rem;
+    background: #8b4513;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    border-bottom: 1px solid #3b3b4f;
+}
+
+/* Add emojis before titles */
+dl.field-list dt:before {
+    content: "📋 ";
+    margin-right: 0.3rem;
+}
+
+/* Specific emojis for different sections - check actual text content */
+dl.field-list dt:contains("PARAMETERS"):before,
+dl.field-list dt:first-child:before {
+    content: "⚙️ ";
+}
+
+dl.field-list dt:contains("RETURNS"):before {
+    content: "↩️ ";
+}
+
+dl.field-list dt:contains("RETURN TYPE"):before {
+    content: "🔤 ";
+}
+
+dl.field-list dt:contains("RAISES"):before {
+    content: "⚠️ ";
+}
+
+/* Alternative approach using nth-child if content matching doesn't work */
+dl.field-list dt:nth-child(3):before {
+    content: "🔤 ";
+}
+
+dl.field-list dt:not(:first-child) {
+    border-top: 2px solid #3b3b4f;
+}
+
+/* The content under Parameters, Returns, etc. */
+dl.field-list dd {
+    margin: 0;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+    color: #e2e8f0;
+    line-height: 1.2;
+    background: #1e1e2e;
+}
+
+/* List inside dd (e.g., for multiple parameters) */
+dl.field-list dd ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+dl.field-list dd li {
+    margin-bottom: 0.4rem;
+    padding: 0 0 0 1rem;
+    color: #e2e8f0;
+    position: relative;
+}
+
+/* Add bullet points */
+dl.field-list dd li:before {
+    content: "•";
+    color: #fbbf24;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+dl.field-list dd li:last-child {
+    margin-bottom: 0;
+}
+
+/* Remove any trailing margins/padding from the last element */
+dl.field-list dd > *:last-child {
+    margin-bottom: 0 !important;
+}
+
+dl.field-list dd ul:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Remove default margins from all text elements inside dd */
+dl.field-list dd p,
+dl.field-list dd div,
+dl.field-list dd span {
+    margin: 0;
+    padding: 0;
+}
+
+/* Parameter names */
+dl.field-list strong {
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+/* Type annotations */
+dl.field-list em {
+    color: #a78bfa;
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Code-like text */
+dl.field-list code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #fbbf24;
+    font-family: 'Courier New', monospace;
+}
+
+/* Links */
+dl.field-list a {
+    color: #67d8ef;
+    text-decoration: none;
+}
+
+dl.field-list a:hover {
+    text-decoration: underline;
+}
+
+
+
+/* Add header bar to code block */
+.highlight-python {
+    border: 1px solid #737395;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.highlight-python:before {
+    content: "🐍 EXAMPLE";
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: #1c8819;;
+    padding: 0.3rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    border-bottom: 1px solid #3b3b4f;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.highlight-python .highlight {
+    padding-top: 2rem;
+}
+
+.highlight-python .copybtn {
+    z-index: 10 !important;
+    top: 0.35rem !important;
+}
+
+
+
+
+
