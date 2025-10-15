@@ -7,7 +7,7 @@
         <link rel="prefetch" href="../_static/logo.png" as="image" />
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.07.19 -->
-        <title>Annotation Loader - modusa 0.4.11 documentation</title>
+        <title>Annotation Loader - modusa 0.4.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -170,7 +170,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">modusa 0.4.11 documentation</div></a>
+      <a href="../index.html"><div class="brand">modusa 0.4.12 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -196,7 +196,7 @@
     <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.4.11 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.12 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -267,12 +267,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="modusa.load_ann">
 <span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">load_ann</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/ann_loader.html#load_ann"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.load_ann" title="Link to this definition">¶</a></dt>
-<dd><p>Load annotation from audatity label text file.</p>
+<dd><p>Load annotation from audatity label
+text file and also ctm file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<em>str</em>) – <ul>
-<li><p>label text file path.</p></li>
+<li><p>label text/ctm file path.</p></li>
 </ul>
 </p></li>
 <li><p><strong>clip</strong> (<em>tuple</em><em>[</em><em>number</em><em>, </em><em>number</em><em>] </em><em>| </em><em>number</em><em> | </em><em>None</em>) – <ul>
@@ -286,7 +287,7 @@
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p>annotation data structure</p></li>
-<li><p>[(start, end, tag), …]</p></li>
+<li><p>[(start, end, label), …]</p></li>
 </ul>
 </p>
 </dd>
@@ -366,7 +367,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=fedc68d7"></script>
+</div><script src="../_static/documentation_options.js?v=de6df23c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

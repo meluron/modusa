@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/logo.png" as="image" />
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.07.19 -->
-        <title>modusa.tools.ann_loader - modusa 0.3.76 documentation</title>
+        <title>modusa.tools.ann_loader - modusa 0.4.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -169,7 +169,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">modusa 0.3.76 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">modusa 0.4.12 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -195,7 +195,7 @@
     <img class="sidebar-logo" src="../../../_static/logo.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.3.76 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.12 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -264,18 +264,17 @@
 <span class="c1"># Email: ankit0.anand0@gmail.com</span>
 <span class="c1">#---------------------------------</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-
 <div class="viewcode-block" id="load_ann">
 <a class="viewcode-back" href="../../../tools/ann_loader.html#modusa.load_ann">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_ann</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Load annotation from audatity label text file.</span>
+<span class="sd">	Load annotation from audatity label</span>
+<span class="sd">	text file and also ctm file.</span>
 
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	path: str</span>
-<span class="sd">		- label text file path.</span>
+<span class="sd">		- label text/ctm file path.</span>
 <span class="sd">	clip: tuple[number, number] | number | None</span>
 <span class="sd">		- Incase you clipped the audio signal, this parameter will help clip the annotation.</span>
 <span class="sd">		- If you clip the audio, say from (10, 20), set the clip to (10, 20).</span>
@@ -285,12 +284,23 @@
 <span class="sd">	-------</span>
 <span class="sd">	list[tuple, ...]</span>
 <span class="sd">		- annotation data structure</span>
-<span class="sd">		- [(start, end, tag), ...]</span>
+<span class="sd">		- [(start, end, label), ...]</span>
 <span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 	
 	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
 		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`path` must be one of (str, Path), got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 	
+	<span class="c1"># Convert to Path object</span>
+	<span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+	
+	<span class="c1"># Check if the path exists</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+		<span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+		
+	<span class="n">ann</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># This will store the annotation</span>
+	
+	<span class="c1"># Clipping the annotation to match with the clipped audio</span>
 	<span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="c1"># Map clip input to the right format</span>
 		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">):</span>
@@ -300,28 +310,58 @@
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid clip type or length: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span><span class="si">}</span><span class="s2">, len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 	
-	<span class="n">ann</span> <span class="o">=</span> <span class="p">[]</span>
-	
-	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-		<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
-		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-			<span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
-			<span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.txt&quot;</span><span class="p">:</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+			<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+			<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+				<span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+				<span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+				
+				<span class="c1"># Incase user has clipped the audio signal, we adjust the annotation</span>
+				<span class="c1"># to match the clipped audio</span>
+				<span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+					<span class="n">offset</span> <span class="o">=</span> <span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+					<span class="c1"># Clamp annotation to clip boundaries</span>
+					<span class="n">new_start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">offset</span>
+					<span class="n">new_end</span>   <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">clip</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">offset</span>
+					
+					<span class="c1"># only keep if there&#39;s still overlap</span>
+					<span class="k">if</span> <span class="n">new_start</span> <span class="o">&lt;</span> <span class="n">new_end</span><span class="p">:</span>
+						<span class="n">ann</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">ann</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+					
+	<span class="k">elif</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.ctm&quot;</span><span class="p">:</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+			<span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 			
-			<span class="c1"># Incase user has clipped the audio signal, we adjust the annotation</span>
-			<span class="c1"># to match the clipped audio</span>
-			<span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="n">offset</span> <span class="o">=</span> <span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-				<span class="c1"># Clamp annotation to clip boundaries</span>
-				<span class="n">new_start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">offset</span>
-				<span class="n">new_end</span>   <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">clip</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">offset</span>
+		<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+			<span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+			<span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="c1"># Handle empty line usually at the end of the ctm file</span>
+				<span class="k">continue</span>
+			<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
+				<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&#39; is not a standard ctm line.&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+				<span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">dur</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+				<span class="n">start</span><span class="p">,</span> <span class="n">dur</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">dur</span><span class="p">)</span>
+				<span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">dur</span>
 				
-				<span class="c1"># only keep if there&#39;s still overlap</span>
-				<span class="k">if</span> <span class="n">new_start</span> <span class="o">&lt;</span> <span class="n">new_end</span><span class="p">:</span>
-					<span class="n">ann</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">ann</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+				<span class="c1"># Incase user has clipped the audio signal, we adjust the annotation</span>
+				<span class="c1"># to match the clipped audio</span>
+				<span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+					<span class="n">offset</span> <span class="o">=</span> <span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+					<span class="c1"># Clamp annotation to clip boundaries</span>
+					<span class="n">new_start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">offset</span>
+					<span class="n">new_end</span>   <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">clip</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">offset</span>
+					
+					<span class="c1"># only keep if there&#39;s still overlap</span>
+					<span class="k">if</span> <span class="n">new_start</span> <span class="o">&lt;</span> <span class="n">new_end</span><span class="p">:</span>
+						<span class="n">ann</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">ann</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
 				
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">ann</span></div>
 
 </pre></div>
@@ -356,7 +396,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=f755cc7d"></script>
+</div><script src="../../../_static/documentation_options.js?v=de6df23c"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
