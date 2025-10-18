@@ -32,8 +32,7 @@ def _load_devanagari_font():
 	
 	# Set as default rcParam
 	mpl.rcParams['font.family'] = hindi_font.get_name()
-	
-_load_devanagari_font()
+
 #==============
 
 class Fig:
@@ -70,6 +69,8 @@ class Fig:
 	"""
 	
 	def __init__(self, arrangement="asm", xlim=None, width=16, dark_mode=False, abc=False, fig_num=None):
+		
+		_load_devanagari_font()
 		
 		if dark_mode:
 			plt.style.use("dark_background")
