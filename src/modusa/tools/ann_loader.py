@@ -27,6 +27,7 @@ def load_ann(path, clip=None):
 		- [(start, end, label), ...]
 	"""
 	from pathlib import Path
+	import warnings
 	
 	if not isinstance(path, (str, Path)):
 		raise ValueError(f"`path` must be one of (str, Path), got {type(path)}")
