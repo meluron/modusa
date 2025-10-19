@@ -1013,6 +1013,43 @@ def dist_plot(*args, ann=None, xlim=None, ylim=None, ylabel=None, xlabel=None, t
 		return fig
 	
 
+# ======== Single Plot ===========
+def plot(*args):
+	"""
+	To create 1D/2D plot for immediate
+	inspection.
+
+	Parameters
+	----------
+	*args: ndarray
+		- Arrays to be plotted.
+	"""
+	n = len(args)
+	
+	if n < 1:
+		raise ValueError("Need atleast 1 positional argument")
+	
+	## 1D Array
+	if args[0].ndim == 1:
+		if n > 1: # User also passed the xs
+			fig = Fig("s").add_signal(args[0], args[1])
+		else:
+			fig = Fig("s").add_signal(args[0])
+	
+	## 2D Array
+	if args[0].ndim == 2:
+		if n == 1:
+			fig = Fig("m").add_matrix(args[0])
+		elif n == 2: # User also passed the xs
+			fig = Fig("m").add_matrix(args[0], args[1])
+		elif n == 3:
+			fig = Fig("m").add_matrix(args[0], args[1], args[2])
+	
+	return fig
+	
+	
+		
+	
 	
 		
 	
