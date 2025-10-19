@@ -49,7 +49,7 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'furo'
-html_logo = "_static/logo.png"
+html_logo = "_static/icon.png"
 html_css_files = ['custom.css']
 
 html_theme_options = {
