@@ -7,6 +7,6 @@ Plotter
 
 .. autofunction:: modusa.hill_plot
 
-
+.. autofunction:: modusa.plot
 
 
