@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>modusa.tools.audio_player - modusa 0.4.18 documentation</title>
+        <title>modusa.tools.audio_player - modusa 0.4.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -164,7 +164,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">modusa 0.4.18 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">modusa 0.4.19 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,7 +188,7 @@
     <img class="sidebar-logo" src="../../../_static/icon.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.4.18 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.19 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -254,13 +254,24 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
 
 <div class="viewcode-block" id="play">
 <a class="viewcode-back" href="../../../tools/audio_player.html#modusa.play">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">clip</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span>
+	<span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+	<span class="n">sr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+	<span class="n">clip</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+	<span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Audio player with optional clip selection and transcription-style label.</span>
-<span class="sd">	Displays a clean caption box with bold timing and text, followed by the player.</span>
+<span class="sd">	Audio player with optional clip selection, transcription-style label,</span>
+<span class="sd">	and an embedded bottom-right logo (../images/icon.png).</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">sr</span>
 	
@@ -273,8 +284,36 @@
 		<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">start_sample</span><span class="p">:</span><span class="n">end_sample</span><span class="p">]</span>
 		<span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">clip</span>
 		
-	<span class="c1"># Build HTML</span>
+	<span class="c1"># Load and embed logo image as base64</span>
+	<span class="n">logo_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;images&quot;</span> <span class="o">/</span> <span class="s2">&quot;icon.png&quot;</span>
+	<span class="n">logo_size</span> <span class="o">=</span> <span class="mi">40</span>
+	<span class="n">logo_html</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">logo_link</span> <span class="o">=</span> <span class="s2">&quot;https://meluron.github.io/modusa&quot;</span>
+	
+	<span class="k">if</span> <span class="n">logo_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logo_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+			<span class="n">encoded_logo</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+			
+		<span class="c1"># Wrap logo in &lt;a&gt; so it&#39;s clickable</span>
+		<span class="n">logo_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">			&lt;a href=&quot;</span><span class="si">{</span><span class="n">logo_link</span><span class="si">}</span><span class="s2">&quot; target=&quot;_blank&quot; style=&quot;text-decoration:none;&quot;&gt;</span>
+<span class="s2">				&lt;img src=&quot;data:image/png;base64,</span><span class="si">{</span><span class="n">encoded_logo</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="s2">					style=&quot;</span>
+<span class="s2">						position:absolute;</span>
+<span class="s2">						bottom:8px;</span>
+<span class="s2">						right:10px;</span>
+<span class="s2">						width:</span><span class="si">{</span><span class="n">logo_size</span><span class="si">}</span><span class="s2">px;</span>
+<span class="s2">						height:</span><span class="si">{</span><span class="n">logo_size</span><span class="si">}</span><span class="s2">px;</span>
+<span class="s2">						opacity:0.8;</span>
+<span class="s2">						transition:opacity 0.2s ease;</span>
+<span class="s2">					&quot;</span>
+<span class="s2">					onmouseover=&quot;this.style.opacity=1.0&quot;</span>
+<span class="s2">					onmouseout=&quot;this.style.opacity=0.8&quot;</span>
+<span class="s2">				/&gt;</span>
+<span class="s2">			&lt;/a&gt;</span>
+<span class="s2">		&quot;&quot;&quot;</span>
 	<span class="n">audio_html</span> <span class="o">=</span> <span class="n">Audio</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
+	
 	<span class="n">label_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">		&lt;div style=&quot;</span>
 <span class="s2">			margin-top:4px;</span>
@@ -293,23 +332,26 @@
 	<span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">	&lt;div style=&quot;</span>
 <span class="s2">		display:inline-block;</span>
+<span class="s2">		position:relative;</span>
 <span class="s2">		border:1px solid #e0e0e0;</span>
 <span class="s2">		border-radius:10px;</span>
-<span class="s2">		padding:12px 16px;</span>
+<span class="s2">		padding:14px 18px 36px 18px;</span>
 <span class="s2">		background:#fff;</span>
 <span class="s2">		font-family:sans-serif;</span>
-<span class="s2">		max-width:800px;</span>
+<span class="s2">		max-width:520px;</span>
 <span class="s2">		box-shadow:0 1px 3px rgba(0,0,0,0.05);</span>
 <span class="s2">	&quot;&gt;</span>
 <span class="s2">		</span><span class="si">{</span><span class="n">label_html</span><span class="si">}</span>
 <span class="s2">		&lt;div style=&quot;margin-top:10px;&quot;&gt;</span>
 <span class="s2">			</span><span class="si">{</span><span class="n">audio_html</span><span class="si">}</span>
 <span class="s2">		&lt;/div&gt;</span>
+<span class="s2">		</span><span class="si">{</span><span class="n">logo_html</span><span class="si">}</span>
 <span class="s2">	&lt;/div&gt;</span>
 <span class="s2">	&quot;&quot;&quot;</span>
 	
 	<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">html</span><span class="p">))</span></div>
 
+	
 </pre></div>
         </article>
       </div>
@@ -342,7 +384,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=1dc8ac46"></script>
+</div><script src="../../../_static/documentation_options.js?v=b488d820"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
