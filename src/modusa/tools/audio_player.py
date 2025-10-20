@@ -5,11 +5,22 @@ import numpy as np
 
 from IPython.display import Audio, HTML, display
 import numpy as np
+from pathlib import Path
 
-def play(y: np.ndarray, sr: float, clip: tuple[float, float] | None = None, label: str | None = None) -> None:
+from IPython.display import Audio, HTML, display
+from pathlib import Path
+import numpy as np
+import base64
+
+def play(
+	y: np.ndarray,
+	sr: float,
+	clip: tuple[float, float] | None = None,
+	label: str | None = None,
+) -> None:
 	"""
-	Audio player with optional clip selection and transcription-style label.
-	Displays a clean caption box with bold timing and text, followed by the player.
+	Audio player with optional clip selection, transcription-style label,
+	and an embedded bottom-right logo (../images/icon.png).
 	"""
 	start_time, end_time = 0.0, len(y) / sr
 	
@@ -22,8 +33,36 @@ def play(y: np.ndarray, sr: float, clip: tuple[float, float] | None = None, labe
 		y = y[start_sample:end_sample]
 		start_time, end_time = clip
 		
-	# Build HTML
+	# Load and embed logo image as base64
+	logo_path = Path(__file__).resolve().parent.parent / "images" / "icon.png"
+	logo_size = 40
+	logo_html = ""
+	logo_link = "https://meluron.github.io/modusa"
+	
+	if logo_path.exists():
+		with open(logo_path, "rb") as f:
+			encoded_logo = base64.b64encode(f.read()).decode("utf-8")
+			
+		# Wrap logo in <a> so it's clickable
+		logo_html = f"""
+			<a href="{logo_link}" target="_blank" style="text-decoration:none;">
+				<img src="data:image/png;base64,{encoded_logo}"
+					style="
+						position:absolute;
+						bottom:8px;
+						right:10px;
+						width:{logo_size}px;
+						height:{logo_size}px;
+						opacity:0.8;
+						transition:opacity 0.2s ease;
+					"
+					onmouseover="this.style.opacity=1.0"
+					onmouseout="this.style.opacity=0.8"
+				/>
+			</a>
+		"""
 	audio_html = Audio(data=y, rate=sr)._repr_html_()
+	
 	label_html = f"""
 		<div style="
 			margin-top:4px;
@@ -42,19 +81,22 @@ def play(y: np.ndarray, sr: float, clip: tuple[float, float] | None = None, labe
 	html = f"""
 	<div style="
 		display:inline-block;
+		position:relative;
 		border:1px solid #e0e0e0;
 		border-radius:10px;
-		padding:12px 16px;
+		padding:14px 18px 36px 18px;
 		background:#fff;
 		font-family:sans-serif;
-		max-width:800px;
+		max-width:520px;
 		box-shadow:0 1px 3px rgba(0,0,0,0.05);
 	">
 		{label_html}
 		<div style="margin-top:10px;">
 			{audio_html}
 		</div>
+		{logo_html}
 	</div>
 	"""
 	
 	display(HTML(html))
+	
