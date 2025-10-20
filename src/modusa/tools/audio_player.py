@@ -3,28 +3,17 @@
 from IPython.display import Audio, HTML, display
 import numpy as np
 
+from IPython.display import Audio, HTML, display
+import numpy as np
+
 def play(y: np.ndarray, sr: float, clip: tuple[float, float] | None = None, label: str | None = None) -> None:
 	"""
-	Simple audio player with optional clip selection and label, 
-	displayed neatly in a small table.
-
-	Parameters
-	----------
-	y : np.ndarray
-			Mono audio data (1D numpy array).
-	sr : float
-			Sampling rate.
-	clip : tuple[float, float] | None
-			(start_time, end_time) in seconds. Plays whole audio if None.
-	label : str | None
-			Optional label to describe the clip (e.g. "Chorus", "Intro").
-
-	Returns
-	-------
-	None
+	Audio player with optional clip selection and transcription-style label.
+	Displays a clean caption box with bold timing and text, followed by the player.
 	"""
 	start_time, end_time = 0.0, len(y) / sr
-
+	
+	# Optional clip selection
 	if clip is not None:
 		if not isinstance(clip, tuple) or len(clip) != 2:
 			raise ValueError("`clip` must be a tuple of (start_time, end_time)")
@@ -33,28 +22,39 @@ def play(y: np.ndarray, sr: float, clip: tuple[float, float] | None = None, labe
 		y = y[start_sample:end_sample]
 		start_time, end_time = clip
 		
-	# Build the HTML table
+	# Build HTML
 	audio_html = Audio(data=y, rate=sr)._repr_html_()
-	label_html = label if label is not None else "-"
-
-	table_html = f"""
-	<div style="display:inline-block; border:1px solid #ccc; border-radius:6px; overflow:hidden;">
-		<table style="border-collapse:collapse; font-family:sans-serif; font-size:14px;">
-			<tr style="background-color:#f8f8f8;">
-				<th style="padding:6px 12px; text-align:left; min-width:120px;">Timing</th>
-				<th style="padding:6px 12px; text-align:left;">Label</th>
-				<th style="padding:6px 12px; text-align:left;">Player</th>
-			</tr>
-			<tr>
-				<td style="padding:6px 12px; border-top:1px; solid #ddd; text-align:left">
-					{start_time:.2f}s → {end_time:.2f}s
-				</td>
-				<td style="padding:6px 12px; border-top:1px solid #ddd; text-align:left;">{label_html}</td>
-				<td style="padding:6px 12px; border-top:1px solid #ddd;">{audio_html}</td>
-			</tr>
-		</table>
+	label_html = f"""
+		<div style="
+			margin-top:4px;
+			padding:10px 12px;
+			background:#f7f7f7;
+			border-radius:6px;
+			color:#222;
+			font-size:14px;
+			line-height:1.5;
+		">
+			<strong>{start_time:.2f}s → {end_time:.2f}s:</strong>
+			<span style="margin-left:6px;">{label if label else ''}</span>
+		</div>
+	"""
+	
+	html = f"""
+	<div style="
+		display:inline-block;
+		border:1px solid #e0e0e0;
+		border-radius:10px;
+		padding:12px 16px;
+		background:#fff;
+		font-family:sans-serif;
+		max-width:800px;
+		box-shadow:0 1px 3px rgba(0,0,0,0.05);
+	">
+		{label_html}
+		<div style="margin-top:10px;">
+			{audio_html}
+		</div>
 	</div>
 	"""
-
-	display(HTML(table_html))
 	
+	display(HTML(html))
