@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>modusa.tools.audio_player - modusa 0.4.17 documentation</title>
+        <title>modusa.tools.audio_player - modusa 0.4.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -164,7 +164,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">modusa 0.4.17 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">modusa 0.4.18 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,7 +188,7 @@
     <img class="sidebar-logo" src="../../../_static/icon.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.4.17 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.18 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -252,30 +252,19 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Audio</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <div class="viewcode-block" id="play">
 <a class="viewcode-back" href="../../../tools/audio_player.html#modusa.play">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">clip</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Simple audio player with optional clip selection and label, </span>
-<span class="sd">	displayed neatly in a small table.</span>
-
-<span class="sd">	Parameters</span>
-<span class="sd">	----------</span>
-<span class="sd">	y : np.ndarray</span>
-<span class="sd">			Mono audio data (1D numpy array).</span>
-<span class="sd">	sr : float</span>
-<span class="sd">			Sampling rate.</span>
-<span class="sd">	clip : tuple[float, float] | None</span>
-<span class="sd">			(start_time, end_time) in seconds. Plays whole audio if None.</span>
-<span class="sd">	label : str | None</span>
-<span class="sd">			Optional label to describe the clip (e.g. &quot;Chorus&quot;, &quot;Intro&quot;).</span>
-
-<span class="sd">	Returns</span>
-<span class="sd">	-------</span>
-<span class="sd">	None</span>
+<span class="sd">	Audio player with optional clip selection and transcription-style label.</span>
+<span class="sd">	Displays a clean caption box with bold timing and text, followed by the player.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">sr</span>
-
+	
+	<span class="c1"># Optional clip selection</span>
 	<span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`clip` must be a tuple of (start_time, end_time)&quot;</span><span class="p">)</span>
@@ -284,32 +273,43 @@
 		<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">start_sample</span><span class="p">:</span><span class="n">end_sample</span><span class="p">]</span>
 		<span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">clip</span>
 		
-	<span class="c1"># Build the HTML table</span>
+	<span class="c1"># Build HTML</span>
 	<span class="n">audio_html</span> <span class="o">=</span> <span class="n">Audio</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
-	<span class="n">label_html</span> <span class="o">=</span> <span class="n">label</span> <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;-&quot;</span>
-
-	<span class="n">table_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">	&lt;div style=&quot;display:inline-block; border:1px solid #ccc; border-radius:6px; overflow:hidden;&quot;&gt;</span>
-<span class="s2">		&lt;table style=&quot;border-collapse:collapse; font-family:sans-serif; font-size:14px;&quot;&gt;</span>
-<span class="s2">			&lt;tr style=&quot;background-color:#f8f8f8;&quot;&gt;</span>
-<span class="s2">				&lt;th style=&quot;padding:6px 12px; text-align:left; min-width:120px;&quot;&gt;Timing&lt;/th&gt;</span>
-<span class="s2">				&lt;th style=&quot;padding:6px 12px; text-align:left;&quot;&gt;Label&lt;/th&gt;</span>
-<span class="s2">				&lt;th style=&quot;padding:6px 12px; text-align:left;&quot;&gt;Player&lt;/th&gt;</span>
-<span class="s2">			&lt;/tr&gt;</span>
-<span class="s2">			&lt;tr&gt;</span>
-<span class="s2">				&lt;td style=&quot;padding:6px 12px; border-top:1px; solid #ddd; text-align:left&quot;&gt;</span>
-<span class="s2">					</span><span class="si">{</span><span class="n">start_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s → </span><span class="si">{</span><span class="n">end_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s</span>
-<span class="s2">				&lt;/td&gt;</span>
-<span class="s2">				&lt;td style=&quot;padding:6px 12px; border-top:1px solid #ddd; text-align:left;&quot;&gt;</span><span class="si">{</span><span class="n">label_html</span><span class="si">}</span><span class="s2">&lt;/td&gt;</span>
-<span class="s2">				&lt;td style=&quot;padding:6px 12px; border-top:1px solid #ddd;&quot;&gt;</span><span class="si">{</span><span class="n">audio_html</span><span class="si">}</span><span class="s2">&lt;/td&gt;</span>
-<span class="s2">			&lt;/tr&gt;</span>
-<span class="s2">		&lt;/table&gt;</span>
+	<span class="n">label_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">		&lt;div style=&quot;</span>
+<span class="s2">			margin-top:4px;</span>
+<span class="s2">			padding:10px 12px;</span>
+<span class="s2">			background:#f7f7f7;</span>
+<span class="s2">			border-radius:6px;</span>
+<span class="s2">			color:#222;</span>
+<span class="s2">			font-size:14px;</span>
+<span class="s2">			line-height:1.5;</span>
+<span class="s2">		&quot;&gt;</span>
+<span class="s2">			&lt;strong&gt;</span><span class="si">{</span><span class="n">start_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s → </span><span class="si">{</span><span class="n">end_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s:&lt;/strong&gt;</span>
+<span class="s2">			&lt;span style=&quot;margin-left:6px;&quot;&gt;</span><span class="si">{</span><span class="n">label</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&lt;/span&gt;</span>
+<span class="s2">		&lt;/div&gt;</span>
+<span class="s2">	&quot;&quot;&quot;</span>
+	
+	<span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">	&lt;div style=&quot;</span>
+<span class="s2">		display:inline-block;</span>
+<span class="s2">		border:1px solid #e0e0e0;</span>
+<span class="s2">		border-radius:10px;</span>
+<span class="s2">		padding:12px 16px;</span>
+<span class="s2">		background:#fff;</span>
+<span class="s2">		font-family:sans-serif;</span>
+<span class="s2">		max-width:800px;</span>
+<span class="s2">		box-shadow:0 1px 3px rgba(0,0,0,0.05);</span>
+<span class="s2">	&quot;&gt;</span>
+<span class="s2">		</span><span class="si">{</span><span class="n">label_html</span><span class="si">}</span>
+<span class="s2">		&lt;div style=&quot;margin-top:10px;&quot;&gt;</span>
+<span class="s2">			</span><span class="si">{</span><span class="n">audio_html</span><span class="si">}</span>
+<span class="s2">		&lt;/div&gt;</span>
 <span class="s2">	&lt;/div&gt;</span>
 <span class="s2">	&quot;&quot;&quot;</span>
-
-	<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">table_html</span><span class="p">))</span></div>
-
 	
+	<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">html</span><span class="p">))</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -342,7 +342,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=bfbf5d01"></script>
+</div><script src="../../../_static/documentation_options.js?v=1dc8ac46"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
