@@ -3,10 +3,10 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
-        <link rel="prefetch" href="../../../_static/logo.png" as="image">
+        <link rel="prefetch" href="../../../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>modusa.tools.audio_loader - modusa 0.4.12 documentation</title>
+        <title>modusa.tools.audio_loader - modusa 0.4.21 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -164,7 +164,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">modusa 0.4.12 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">modusa 0.4.21 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -185,10 +185,10 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../../../_static/logo.png" alt="Logo"/>
+    <img class="sidebar-logo" src="../../../_static/icon.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.4.12 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.21 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -261,7 +261,7 @@
 
 <div class="viewcode-block" id="load">
 <a class="viewcode-back" href="../../../tools/audio_loader.html#modusa.load">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Loads audio file from various sources.</span>
 
@@ -275,14 +275,16 @@
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	path: str</span>
-<span class="sd">		- Path to the audio</span>
-<span class="sd">		- Youtube URL</span>
+<span class="sd">		- Path to the audio file.</span>
+<span class="sd">		- YouTube URL.</span>
 <span class="sd">	sr: int | None</span>
 <span class="sd">		- Sampling rate to load the audio in.</span>
-<span class="sd">	clip: number | tuple[number, number] | None</span>
-<span class="sd">		- Which segment of the audio you want.</span>
-<span class="sd">		- Eg., 10 =&gt; First 10 sec, (5, 10) =&gt; 5 to 10 second</span>
+<span class="sd">	trim: number | tuple[number, number] | None</span>
+<span class="sd">		- Segment of the audio to load.</span>
+<span class="sd">		- Example: 10 =&gt; First 10 seconds, (5, 10) =&gt; 5 to 10 seconds.</span>
 <span class="sd">		- Default: None =&gt; Entire audio.</span>
+<span class="sd">	mono: bool</span>
+<span class="sd">		- If True, loads the signal in mono.</span>
 
 <span class="sd">	Return</span>
 <span class="sd">	------</span>
@@ -343,16 +345,16 @@
 				<span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sr</span>
 				
 	<span class="c1"># Clip the audio signal as per needed</span>
-	<span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">trim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 		<span class="c1"># Map clip input to the right format</span>
-		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">):</span>
-			<span class="n">clip</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clip</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-			<span class="n">clip</span> <span class="o">=</span> <span class="p">(</span><span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">clip</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">):</span>
+			<span class="n">trim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">trim</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">trim</span> <span class="o">=</span> <span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid clip type or length: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span><span class="si">}</span><span class="s2">, len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">clip</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trim type or length: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span><span class="si">}</span><span class="s2">, len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 		
-		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">clip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">audio_sr</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">clip</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">audio_sr</span><span class="p">)]</span>
+		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">audio_sr</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">audio_sr</span><span class="p">)]</span>
 	
 	<span class="k">return</span> <span class="n">audio_data</span><span class="p">,</span> <span class="n">audio_sr</span><span class="p">,</span> <span class="n">title</span></div>
 
@@ -388,7 +390,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=de6df23c"></script>
+</div><script src="../../../_static/documentation_options.js?v=c924e2bd"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
