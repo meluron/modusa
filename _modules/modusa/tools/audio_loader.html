@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>modusa.tools.audio_loader - modusa 0.4.21 documentation</title>
+        <title>modusa.tools.audio_loader - modusa 0.4.23 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -164,7 +164,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">modusa 0.4.21 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">modusa 0.4.23 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,7 +188,7 @@
     <img class="sidebar-logo" src="../../../_static/icon.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.4.21 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.23 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -250,114 +250,160 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">imageio_ffmpeg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ffmpeg</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.youtube_downloader</span><span class="w"> </span><span class="kn">import</span> <span class="n">download</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.audio_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<div class="viewcode-block" id="load">
-<a class="viewcode-back" href="../../../tools/audio_loader.html#modusa.load">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_audio_info_ffmpeg</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Loads audio file from various sources.</span>
-
-<span class="sd">	.. code-block:: python</span>
-<span class="sd">		</span>
-<span class="sd">		import modusa as ms</span>
-<span class="sd">		audio_fp = ms.load(</span>
-<span class="sd">			&quot;https://www.youtube.com/watch?v=lIpw9-Y_N0g&quot;,</span>
-<span class="sd">			sr = None, trim=(5, 10))</span>
+<span class="sd">	To get the original sampling rate and number of</span>
+<span class="sd">	channels of a given audio file by parsing the</span>
+<span class="sd">	metadata. (No extra tool required).</span>
 
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
-<span class="sd">	path: str</span>
-<span class="sd">		- Path to the audio file.</span>
-<span class="sd">		- YouTube URL.</span>
-<span class="sd">	sr: int | None</span>
-<span class="sd">		- Sampling rate to load the audio in.</span>
-<span class="sd">	trim: number | tuple[number, number] | None</span>
-<span class="sd">		- Segment of the audio to load.</span>
-<span class="sd">		- Example: 10 =&gt; First 10 seconds, (5, 10) =&gt; 5 to 10 seconds.</span>
-<span class="sd">		- Default: None =&gt; Entire audio.</span>
-<span class="sd">	mono: bool</span>
-<span class="sd">		- If True, loads the signal in mono.</span>
-
-<span class="sd">	Return</span>
-<span class="sd">	------</span>
-<span class="sd">	np.ndarray</span>
-<span class="sd">		- Audio signal.</span>
+<span class="sd">	audiofp: PathLike</span>
+<span class="sd">		- Audio filepath</span>
+<span class="sd">	</span>
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
 <span class="sd">	int</span>
-<span class="sd">		- Sampling rate of the loaded audio signal.</span>
-<span class="sd">	title</span>
-<span class="sd">		- Title of the loaded audio.</span>
-<span class="sd">		- Filename without extension or YouTube title.</span>
+<span class="sd">		- Original sampling rate (hz)</span>
+<span class="sd">	int</span>
+<span class="sd">		- Number of channels</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="c1"># Check if the path is YouTube</span>
-	<span class="k">if</span> <span class="s2">&quot;.youtube.&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-		<span class="c1"># Download the audio in temp directory using tempfile module</span>
-		<span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
-			<span class="c1"># Download</span>
-			<span class="n">audio_fp</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">))</span>
-			
-			<span class="c1"># Convert the audio to &quot;.wav&quot; form for loading</span>
-			<span class="n">wav_audio_fp</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">inp_audio_fp</span><span class="o">=</span><span class="n">audio_fp</span><span class="p">,</span> <span class="n">output_audio_fp</span><span class="o">=</span><span class="n">audio_fp</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.wav&quot;</span><span class="p">))</span>
-			
-			<span class="c1"># Load the audio in memory</span>
-			<span class="n">audio_data</span><span class="p">,</span> <span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">wav_audio_fp</span><span class="p">)</span>
-			<span class="n">title</span> <span class="o">=</span> <span class="n">audio_fp</span><span class="o">.</span><span class="n">stem</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="c1"># Check if the file exists</span>
-		<span class="n">fp</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+	<span class="n">ffmpeg_exe</span> <span class="o">=</span> <span class="n">ffmpeg</span><span class="o">.</span><span class="n">get_ffmpeg_exe</span><span class="p">()</span>
+	<span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">ffmpeg_exe</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)]</span>
+	<span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">text</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">stderr</span>
+	
+	<span class="c1"># Example parse: &quot;Stream #0:0: Audio: mp3, 44100 Hz, stereo, ...&quot;</span>
+	<span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Audio:.*?(\d+)\s*Hz.*?(mono|stereo)&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not parse audio info&quot;</span><span class="p">)</span>
+	<span class="n">sr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+	<span class="n">channels</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;mono&quot;</span> <span class="k">else</span> <span class="mi">2</span>
+	<span class="k">return</span> <span class="n">sr</span><span class="p">,</span> <span class="n">channels</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_audio_from_youtube</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Download audio from a YouTube URL, convert it to WAV, and return the path.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	url : str</span>
+<span class="sd">		YouTube video URL.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	Path</span>
+<span class="sd">		Path to the converted WAV file (you can delete it later).</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">from</span><span class="w"> </span><span class="nn">modusa.tools.youtube_downloader</span><span class="w"> </span><span class="kn">import</span> <span class="n">download</span>
+	<span class="kn">from</span><span class="w"> </span><span class="nn">modusa.tools.audio_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span>
+	<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+	
+	<span class="c1"># Temporary directory to hold files (auto-created, not auto-deleted)</span>
+	<span class="n">tmpdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">())</span>
+	
+	<span class="c1"># Download YouTube audio (e.g. .m4a or .webm)</span>
+	<span class="n">audio_fp</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">tmpdir</span><span class="p">)</span>
+	
+	<span class="c1"># Convert downloaded file to .wav</span>
+	<span class="n">wav_audio_fp</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">inp_audio_fp</span><span class="o">=</span><span class="n">audio_fp</span><span class="p">,</span> <span class="n">output_audio_fp</span><span class="o">=</span><span class="n">audio_fp</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.wav&quot;</span><span class="p">))</span>
+	
+	<span class="c1"># Return path to the WAV file</span>
+	<span class="k">return</span> <span class="n">wav_audio_fp</span>
+
+<span class="c1">#---------------------</span>
+<span class="c1"># Main Function</span>
+<span class="c1">#---------------------</span>
+<div class="viewcode-block" id="load">
+<a class="viewcode-back" href="../../../tools/audio_loader.html#modusa.load">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Lightweight audio loader using imageio-ffmpeg.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	path: PathLike/str/URL</span>
+<span class="sd">		- Path to the audio file / YouTube video</span>
+<span class="sd">	sr: int</span>
+<span class="sd">		- Sampling rate to load the audio in.</span>
+<span class="sd">		- Default: None =&gt; Use the original sampling rate</span>
+<span class="sd">	trim: tuple[number, number]</span>
+<span class="sd">		- (start, end) in seconds to trim the audio clip.</span>
+<span class="sd">		- Default: None =&gt; No trimming</span>
+<span class="sd">	ch: int</span>
+<span class="sd">		- 1 for mono and 2 for stereo</span>
+<span class="sd">		- Default: None =&gt; Use the original number of channels.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	np.ndarray</span>
+<span class="sd">		- Audio signal Float32 waveform in [-1, 1].</span>
+<span class="sd">	int:</span>
+<span class="sd">		Sampling rate.</span>
+<span class="sd">	str:</span>
+<span class="sd">		File name stem.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+	<span class="n">ffmpeg_exe</span> <span class="o">=</span> <span class="n">ffmpeg</span><span class="o">.</span><span class="n">get_ffmpeg_exe</span><span class="p">()</span>
+	
+	<span class="n">yt</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Is the path a youtube URL</span>
+	
+	<span class="k">if</span> <span class="s2">&quot;.youtube&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+		<span class="n">yt</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">_load_audio_from_youtube</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ConnectionRefusedError</span><span class="p">(</span><span class="s2">&quot;unable to download from YouTube&quot;</span><span class="p">)</span>
+	
+	<span class="c1"># Find the real sample rate from the file</span>
+	<span class="k">if</span> <span class="n">sr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">sr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_audio_info_ffmpeg</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">sr</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">sr</span> <span class="o">&lt;</span> <span class="mi">80000</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading the metadata for original sampling rate </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2">, please set `sr` explicitly&quot;</span><span class="p">)</span>
+	
+	<span class="c1"># Find the real number of channels from the file</span>
+	<span class="k">if</span> <span class="n">ch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">_</span><span class="p">,</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">_get_audio_info_ffmpeg</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 		
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">fp</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-			<span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-			
-		<span class="c1"># Load the audio in memory</span>
-		<span class="n">audio_data</span><span class="p">,</span> <span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-		<span class="n">title</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">stem</span>
+		<span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading the metadata for number of channels </span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2">, please set `ch` explicitly&quot;</span><span class="p">)</span>
 		
-	<span class="c1"># Convert to mono if requested and it&#39;s multi-channel</span>
-	<span class="k">if</span> <span class="n">mono</span> <span class="ow">and</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-		
-	<span class="c1"># Resample if needed</span>
-	<span class="k">if</span> <span class="n">sr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">audio_sr</span> <span class="o">!=</span> <span class="n">sr</span><span class="p">:</span>
-		<span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span> <span class="o">*</span> <span class="n">sr</span> <span class="o">/</span> <span class="n">audio_sr</span><span class="p">)</span>
-		
-		<span class="k">if</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-			<span class="c1"># Mono</span>
-			<span class="n">audio_data</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">audio_data</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="c1"># Stereo or multi-channel: resample each channel independently</span>
-			<span class="n">audio_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
-				<span class="n">resample</span><span class="p">(</span><span class="n">audio_data</span><span class="p">[:,</span> <span class="n">ch</span><span class="p">],</span> <span class="n">n_samples</span><span class="p">)</span>
-				<span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">audio_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-			<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-			
-		<span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sr</span>
-		
-	<span class="c1"># Trim if requested</span>
+	<span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">ffmpeg_exe</span><span class="p">]</span>
+	
+	<span class="c1"># Optional trimming</span>
 	<span class="k">if</span> <span class="n">trim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-			<span class="n">trim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">trim</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-			<span class="n">trim</span> <span class="o">=</span> <span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trim type or length: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span><span class="si">}</span><span class="s2">, len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-			
-		<span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">audio_sr</span><span class="p">)</span>
-		<span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">audio_sr</span><span class="p">)</span>
-		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+		<span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">trim</span>
+		<span class="n">duration</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+		<span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-ss&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">duration</span><span class="p">)]</span>
 		
-	<span class="c1"># Clip to avoid out-of-range playback issues</span>
-	<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">audio_data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">):</span>
-		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">audio_data</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+	<span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;s16le&quot;</span><span class="p">,</span> <span class="s2">&quot;-acodec&quot;</span><span class="p">,</span> <span class="s2">&quot;pcm_s16le&quot;</span><span class="p">]</span>
+	<span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-ar&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sr</span><span class="p">)]</span>
+	<span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-ac&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ch</span><span class="p">)]</span>
 		
-	<span class="k">return</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">audio_sr</span><span class="p">,</span> <span class="n">title</span></div>
+	<span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span>
+	
+	<span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">)</span>
+	<span class="n">raw</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+	<span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+	
+	<span class="n">audio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="mf">32768.0</span>
+	
+	<span class="c1"># Stereo reshaping if forced</span>
+	<span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+		<span class="n">audio</span> <span class="o">=</span> <span class="n">audio</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+		
+	<span class="c1"># Delete the file if downloaded from youtube</span>
+	<span class="k">if</span> <span class="n">yt</span><span class="p">:</span>
+		<span class="n">path</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">rmdir</span><span class="p">()</span>
+		
+	<span class="k">return</span> <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">stem</span></div>
 
 </pre></div>
         </article>
@@ -391,7 +437,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=c924e2bd"></script>
+</div><script src="../../../_static/documentation_options.js?v=40d50c30"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
