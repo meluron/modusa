@@ -5,7 +5,7 @@
 groups = ["default", "docs", "misc", "profiling", "test", "upload"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:9349610d8e051c311c9580cd0b561d6b723a20797e4710293a2008706b4f11ac"
+content_hash = "sha256:5e09f3b8c783e61538cad400ce647eb1e28db923f9ab78420165f7d6cd3f452d"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -251,7 +251,7 @@ name = "cffi"
 version = "2.0.0"
 requires_python = ">=3.9"
 summary = "Foreign Function Interface for Python calling C code."
-groups = ["docs", "upload"]
+groups = ["default", "docs", "upload"]
 dependencies = [
     "pycparser; implementation_name != \"PyPy\"",
 ]
@@ -2272,7 +2272,7 @@ name = "pycparser"
 version = "2.23"
 requires_python = ">=3.8"
 summary = "C parser in Python"
-groups = ["docs", "upload"]
+groups = ["default", "docs", "upload"]
 marker = "implementation_name != \"PyPy\""
 files = [
     {file = "pycparser-2.23-py3-none-any.whl", hash = "sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934"},
@@ -2840,6 +2840,23 @@ groups = ["docs"]
 files = [
     {file = "snowballstemmer-3.0.1-py3-none-any.whl", hash = "sha256:6cd7b3897da8d6c9ffb968a6781fa6532dce9c3618a4b127d920dab764a19064"},
     {file = "snowballstemmer-3.0.1.tar.gz", hash = "sha256:6d5eeeec8e9f84d4d56b847692bacf79bc2c8e90c7f80ca4444ff8b6f2e52895"},
+]
+
+[[package]]
+name = "sounddevice"
+version = "0.5.3"
+requires_python = ">=3.7"
+summary = "Play and Record Sound with Python"
+groups = ["default"]
+dependencies = [
+    "CFFI>=1.0",
+]
+files = [
+    {file = "sounddevice-0.5.3-py3-none-any.whl", hash = "sha256:ea7738baa0a9f9fef7390f649e41c9f2c8ada776180e56c2ffd217133c92a806"},
+    {file = "sounddevice-0.5.3-py3-none-macosx_10_6_x86_64.macosx_10_6_universal2.whl", hash = "sha256:278dc4451fff70934a176df048b77d80d7ce1623a6ec9db8b34b806f3112f9c2"},
+    {file = "sounddevice-0.5.3-py3-none-win32.whl", hash = "sha256:845d6927bcf14e84be5292a61ab3359cf8e6b9145819ec6f3ac2619ff089a69c"},
+    {file = "sounddevice-0.5.3-py3-none-win_amd64.whl", hash = "sha256:f55ad20082efc2bdec06928e974fbcae07bc6c405409ae1334cefe7d377eb687"},
+    {file = "sounddevice-0.5.3.tar.gz", hash = "sha256:cbac2b60198fbab84533697e7c4904cc895ec69d5fb3973556c9eb74a4629b2c"},
 ]
 
 [[package]]
