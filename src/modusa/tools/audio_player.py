@@ -24,7 +24,8 @@ def play(y, sr: float, clip=None, label=None):
 	-------
 	None
 	"""
-	start_time, end_time = 0.0, len(y) / sr
+	start_time = 0.0
+	end_time = len(y) / sr if y.ndim < 2 else y[0].size / sr
 	
 	# Optional clip selection
 	if clip is not None:

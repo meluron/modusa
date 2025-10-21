@@ -3,14 +3,14 @@
 
 import soundfile as sf
 from scipy.signal import resample
+import numpy as np
 from pathlib import Path
 import tempfile
 from scipy.signal import resample
 from .youtube_downloader import download
 from .audio_converter import convert
 
-
-def load(path, sr=None, trim=None):
+def load(path, sr=None, trim=None, mono=True):
 	"""
 	Loads audio file from various sources.
 
@@ -19,7 +19,7 @@ def load(path, sr=None, trim=None):
 		import modusa as ms
 		audio_fp = ms.load(
 			"https://www.youtube.com/watch?v=lIpw9-Y_N0g",
-			sr = None, clip=(5, 10))
+			sr = None, trim=(5, 10))
 
 	Parameters
 	----------
@@ -45,7 +45,6 @@ def load(path, sr=None, trim=None):
 		- Title of the loaded audio.
 		- Filename without extension or YouTube title.
 	"""
-	
 	# Check if the path is YouTube
 	if ".youtube." in str(path):
 		# Download the audio in temp directory using tempfile module
@@ -59,50 +58,52 @@ def load(path, sr=None, trim=None):
 			# Load the audio in memory
 			audio_data, audio_sr = sf.read(wav_audio_fp)
 			title = audio_fp.stem
-			
-			# Convert to mono if it's multi-channel
-			if audio_data.ndim > 1:
-				audio_data = audio_data.mean(axis=1)
-				
-			# Resample if needed
-			if sr is not None:
-				if audio_sr != sr:
-					n_samples = int(len(audio_data) * sr / audio_sr)
-					audio_data = resample(audio_data, n_samples)
-					audio_sr = sr
-		
 	else:
 		# Check if the file exists
 		fp = Path(path)
 		
 		if not fp.exists():
 			raise FileNotFoundError(f"{path} does not exist.")
-		
+			
 		# Load the audio in memory
 		audio_data, audio_sr = sf.read(fp)
 		title = fp.stem
 		
-		# Convert to mono if it's multi-channel
-		if audio_data.ndim > 1:
-			audio_data = audio_data.mean(axis=1)
+	# Convert to mono if requested and it's multi-channel
+	if mono and audio_data.ndim > 1:
+		audio_data = audio_data.mean(axis=1)
+		
+	# Resample if needed
+	if sr is not None and audio_sr != sr:
+		n_samples = int(len(audio_data) * sr / audio_sr)
+		
+		if audio_data.ndim == 1:
+			# Mono
+			audio_data = resample(audio_data, n_samples)
+		else:
+			# Stereo or multi-channel: resample each channel independently
+			audio_data = np.stack([
+				resample(audio_data[:, ch], n_samples)
+				for ch in range(audio_data.shape[1])
+			], axis=1)
 			
-		# Resample if needed
-		if sr is not None:
-			if audio_sr != sr:
-				n_samples = int(len(audio_data) * sr / audio_sr)
-				audio_data = resample(audio_data, n_samples)
-				audio_sr = sr
-				
-	# Clip the audio signal as per needed
+		audio_sr = sr
+		
+	# Trim if requested
 	if trim is not None:
-		# Map clip input to the right format
-		if isinstance(trim, int or float):
+		if isinstance(trim, (int, float)):
 			trim = (0, trim)
 		elif isinstance(trim, tuple) and len(trim) > 1:
 			trim = (trim[0], trim[1])
 		else:
 			raise ValueError(f"Invalid trim type or length: {type(trim)}, len={len(trim)}")
+			
+		start = int(trim[0] * audio_sr)
+		end = int(trim[1] * audio_sr)
+		audio_data = audio_data[start:end]
 		
-		audio_data = audio_data[int(trim[0]*audio_sr):int(trim[1]*audio_sr)]
-	
-	return audio_data, audio_sr, title
+	# Clip to avoid out-of-range playback issues
+	if np.issubdtype(audio_data.dtype, np.floating):
+		audio_data = np.clip(audio_data, -1.0, 1.0)
+		
+	return audio_data.T, audio_sr, title
