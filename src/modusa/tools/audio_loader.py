@@ -10,7 +10,7 @@ from .youtube_downloader import download
 from .audio_converter import convert
 
 
-def load(path, sr=None, clip=None):
+def load(path, sr=None, trim=None):
 	"""
 	Loads audio file from various sources.
 
@@ -24,14 +24,16 @@ def load(path, sr=None, clip=None):
 	Parameters
 	----------
 	path: str
-		- Path to the audio
-		- Youtube URL
+		- Path to the audio file.
+		- YouTube URL.
 	sr: int | None
 		- Sampling rate to load the audio in.
-	clip: number | tuple[number, number] | None
-		- Which segment of the audio you want.
-		- Eg., 10 => First 10 sec, (5, 10) => 5 to 10 second
+	trim: number | tuple[number, number] | None
+		- Segment of the audio to load.
+		- Example: 10 => First 10 seconds, (5, 10) => 5 to 10 seconds.
 		- Default: None => Entire audio.
+	mono: bool
+		- If True, loads the signal in mono.
 
 	Return
 	------
@@ -92,15 +94,15 @@ def load(path, sr=None, clip=None):
 				audio_sr = sr
 				
 	# Clip the audio signal as per needed
-	if clip is not None:
+	if trim is not None:
 		# Map clip input to the right format
-		if isinstance(clip, int or float):
-			clip = (0, clip)
-		elif isinstance(clip, tuple) and len(clip) > 1:
-			clip = (clip[0], clip[1])
+		if isinstance(trim, int or float):
+			trim = (0, trim)
+		elif isinstance(trim, tuple) and len(trim) > 1:
+			trim = (trim[0], trim[1])
 		else:
-			raise ValueError(f"Invalid clip type or length: {type(clip)}, len={len(clip)}")
+			raise ValueError(f"Invalid trim type or length: {type(trim)}, len={len(trim)}")
 		
-		audio_data = audio_data[int(clip[0]*audio_sr):int(clip[1]*audio_sr)]
+		audio_data = audio_data[int(trim[0]*audio_sr):int(trim[1]*audio_sr)]
 	
 	return audio_data, audio_sr, title

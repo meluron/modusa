@@ -209,6 +209,10 @@ class Fig:
 		
 		axs[-1, 0].tick_params(bottom=True, labelbottom=True)
 		
+		# Add the figure title on top-left (if any)
+		if self._fig_num is not None:
+			fig.suptitle(f'fig - {self._fig_num}', fontsize=12, fontweight='bold', x=0.01, ha='left', va='top', y=0.98)
+			
 		# xlim should be applied on reference subplot, rest all subplots will automatically adjust
 		if xlim is not None:
 			axs[0, 0].set_xlim(xlim)

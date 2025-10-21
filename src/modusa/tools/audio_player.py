@@ -5,15 +5,24 @@ from pathlib import Path
 import numpy as np
 import base64
 
-def play(
-	y: np.ndarray,
-	sr: float,
-	clip: tuple[float, float] | None = None,
-	label: str | None = None,
-) -> None:
+def play(y, sr: float, clip=None, label=None):
 	"""
-	Audio player with optional clip selection, transcription-style label,
-	and an embedded bottom-right logo (../images/icon.png).
+	Audio player with optional clip selection, transcription-style label.
+
+	Parameters
+	----------
+	y: ndarray
+		- Audio signal.
+	sr: float
+		- Sampling rate.
+	clip: tuple[float, float] | None
+		- The portion from the audio signal to be played.
+	label: str | None
+		- Could be transcription/labels attached to the audio.
+	
+	Returns
+	-------
+	None
 	"""
 	start_time, end_time = 0.0, len(y) / sr
 	
@@ -84,7 +93,7 @@ def play(
 		box-shadow:0 1px 3px rgba(0,0,0,0.05);
 	">
 		{label_html}
-		<div style="margin-top:10px;">
+		<div style="margin-top:10px; margin-bottom:10px">
 			{audio_html}
 		</div>
 		{logo_html}

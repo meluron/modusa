@@ -6,7 +6,7 @@
 # Email: ankit0.anand0@gmail.com
 #---------------------------------
 
-def load_ann(path, clip=None):
+def load_ann(path, trim=None):
 	"""
 	Load annotation from audatity label
 	text file and also ctm file.
@@ -15,9 +15,9 @@ def load_ann(path, clip=None):
 	----------
 	path: str
 		- label text/ctm file path.
-	clip: tuple[number, number] | number | None
-		- Incase you clipped the audio signal, this parameter will help clip the annotation.
-		- If you clip the audio, say from (10, 20), set the clip to (10, 20).
+	trim: tuple[number, number] | number | None
+		- Incase you trimmed the audio signal, this parameter will help clip the annotation making sure that the timings are aligned to the trimmed audio.
+		- If you trimmed the audio, say from (10, 20), set the trim to (10, 20).
 		- Default: None
 
 	Returns
@@ -42,14 +42,14 @@ def load_ann(path, clip=None):
 	ann = [] # This will store the annotation
 	
 	# Clipping the annotation to match with the clipped audio
-	if clip is not None:
+	if trim is not None:
 		# Map clip input to the right format
-		if isinstance(clip, int or float):
-			clip = (0, clip)
-		elif isinstance(clip, tuple) and len(clip) > 1:
-			clip = (clip[0], clip[1])
+		if isinstance(trim, int or float):
+			trim = (0, trim)
+		elif isinstance(trim, tuple) and len(trim) > 1:
+			trim = (trim[0], trim[1])
 		else:
-			raise ValueError(f"Invalid clip type or length: {type(clip)}, len={len(clip)}")
+			raise ValueError(f"Invalid clip type or length: {type(trim)}, len={len(trim)}")
 	
 	if path.suffix == ".txt":
 		with open(str(path), "r") as f:
@@ -60,11 +60,11 @@ def load_ann(path, clip=None):
 				
 				# Incase user has clipped the audio signal, we adjust the annotation
 				# to match the clipped audio
-				if clip is not None:
-					offset = clip[0]
+				if trim is not None:
+					offset = trim[0]
 					# Clamp annotation to clip boundaries
-					new_start = max(start, clip[0]) - offset
-					new_end   = min(end, clip[1]) - offset
+					new_start = max(start, trim[0]) - offset
+					new_end   = min(end, trim[1]) - offset
 					
 					# only keep if there's still overlap
 					if new_start < new_end:
@@ -89,11 +89,11 @@ def load_ann(path, clip=None):
 				
 				# Incase user has clipped the audio signal, we adjust the annotation
 				# to match the clipped audio
-				if clip is not None:
-					offset = clip[0]
+				if trim is not None:
+					offset = trim[0]
 					# Clamp annotation to clip boundaries
-					new_start = max(start, clip[0]) - offset
-					new_end   = min(end, clip[1]) - offset
+					new_start = max(start, trim[0]) - offset
+					new_end   = min(end, trim[1]) - offset
 					
 					# only keep if there's still overlap
 					if new_start < new_end:
