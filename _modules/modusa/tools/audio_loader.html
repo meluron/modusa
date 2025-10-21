@@ -252,16 +252,16 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.youtube_downloader</span><span class="w"> </span><span class="kn">import</span> <span class="n">download</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.audio_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert</span>
 
-
 <div class="viewcode-block" id="load">
 <a class="viewcode-back" href="../../../tools/audio_loader.html#modusa.load">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Loads audio file from various sources.</span>
 
@@ -270,7 +270,7 @@
 <span class="sd">		import modusa as ms</span>
 <span class="sd">		audio_fp = ms.load(</span>
 <span class="sd">			&quot;https://www.youtube.com/watch?v=lIpw9-Y_N0g&quot;,</span>
-<span class="sd">			sr = None, clip=(5, 10))</span>
+<span class="sd">			sr = None, trim=(5, 10))</span>
 
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
@@ -296,7 +296,6 @@
 <span class="sd">		- Title of the loaded audio.</span>
 <span class="sd">		- Filename without extension or YouTube title.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	
 	<span class="c1"># Check if the path is YouTube</span>
 	<span class="k">if</span> <span class="s2">&quot;.youtube.&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 		<span class="c1"># Download the audio in temp directory using tempfile module</span>
@@ -310,53 +309,55 @@
 			<span class="c1"># Load the audio in memory</span>
 			<span class="n">audio_data</span><span class="p">,</span> <span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">wav_audio_fp</span><span class="p">)</span>
 			<span class="n">title</span> <span class="o">=</span> <span class="n">audio_fp</span><span class="o">.</span><span class="n">stem</span>
-			
-			<span class="c1"># Convert to mono if it&#39;s multi-channel</span>
-			<span class="k">if</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-				<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-				
-			<span class="c1"># Resample if needed</span>
-			<span class="k">if</span> <span class="n">sr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="k">if</span> <span class="n">audio_sr</span> <span class="o">!=</span> <span class="n">sr</span><span class="p">:</span>
-					<span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span> <span class="o">*</span> <span class="n">sr</span> <span class="o">/</span> <span class="n">audio_sr</span><span class="p">)</span>
-					<span class="n">audio_data</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">audio_data</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-					<span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sr</span>
-		
 	<span class="k">else</span><span class="p">:</span>
 		<span class="c1"># Check if the file exists</span>
 		<span class="n">fp</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 		
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">fp</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 			<span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-		
+			
 		<span class="c1"># Load the audio in memory</span>
 		<span class="n">audio_data</span><span class="p">,</span> <span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
 		<span class="n">title</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">stem</span>
 		
-		<span class="c1"># Convert to mono if it&#39;s multi-channel</span>
-		<span class="k">if</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-			<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+	<span class="c1"># Convert to mono if requested and it&#39;s multi-channel</span>
+	<span class="k">if</span> <span class="n">mono</span> <span class="ow">and</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+		
+	<span class="c1"># Resample if needed</span>
+	<span class="k">if</span> <span class="n">sr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">audio_sr</span> <span class="o">!=</span> <span class="n">sr</span><span class="p">:</span>
+		<span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span> <span class="o">*</span> <span class="n">sr</span> <span class="o">/</span> <span class="n">audio_sr</span><span class="p">)</span>
+		
+		<span class="k">if</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="c1"># Mono</span>
+			<span class="n">audio_data</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">audio_data</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># Stereo or multi-channel: resample each channel independently</span>
+			<span class="n">audio_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
+				<span class="n">resample</span><span class="p">(</span><span class="n">audio_data</span><span class="p">[:,</span> <span class="n">ch</span><span class="p">],</span> <span class="n">n_samples</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">audio_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+			<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 			
-		<span class="c1"># Resample if needed</span>
-		<span class="k">if</span> <span class="n">sr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">audio_sr</span> <span class="o">!=</span> <span class="n">sr</span><span class="p">:</span>
-				<span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span> <span class="o">*</span> <span class="n">sr</span> <span class="o">/</span> <span class="n">audio_sr</span><span class="p">)</span>
-				<span class="n">audio_data</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">audio_data</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
-				<span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sr</span>
-				
-	<span class="c1"># Clip the audio signal as per needed</span>
+		<span class="n">audio_sr</span> <span class="o">=</span> <span class="n">sr</span>
+		
+	<span class="c1"># Trim if requested</span>
 	<span class="k">if</span> <span class="n">trim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-		<span class="c1"># Map clip input to the right format</span>
-		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 			<span class="n">trim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">trim</span><span class="p">)</span>
 		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trim</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
 			<span class="n">trim</span> <span class="o">=</span> <span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid trim type or length: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span><span class="si">}</span><span class="s2">, len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trim</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+			
+		<span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">audio_sr</span><span class="p">)</span>
+		<span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">audio_sr</span><span class="p">)</span>
+		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
 		
-		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">audio_data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">audio_sr</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">trim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">audio_sr</span><span class="p">)]</span>
-	
-	<span class="k">return</span> <span class="n">audio_data</span><span class="p">,</span> <span class="n">audio_sr</span><span class="p">,</span> <span class="n">title</span></div>
+	<span class="c1"># Clip to avoid out-of-range playback issues</span>
+	<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">audio_data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">):</span>
+		<span class="n">audio_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">audio_data</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+		
+	<span class="k">return</span> <span class="n">audio_data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">audio_sr</span><span class="p">,</span> <span class="n">title</span></div>
 
 </pre></div>
         </article>
