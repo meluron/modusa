@@ -1,109 +1,155 @@
 #!/usr/bin/env python3
 
 
-import soundfile as sf
-from scipy.signal import resample
+import subprocess
 import numpy as np
+import imageio_ffmpeg as ffmpeg
 from pathlib import Path
-import tempfile
-from scipy.signal import resample
-from .youtube_downloader import download
-from .audio_converter import convert
+import re
 
-def load(path, sr=None, trim=None, mono=True):
+def _get_audio_info_ffmpeg(path: Path):
 	"""
-	Loads audio file from various sources.
-
-	.. code-block:: python
-		
-		import modusa as ms
-		audio_fp = ms.load(
-			"https://www.youtube.com/watch?v=lIpw9-Y_N0g",
-			sr = None, trim=(5, 10))
+	To get the original sampling rate and number of
+	channels of a given audio file by parsing the
+	metadata. (No extra tool required).
 
 	Parameters
 	----------
-	path: str
-		- Path to the audio file.
-		- YouTube URL.
-	sr: int | None
-		- Sampling rate to load the audio in.
-	trim: number | tuple[number, number] | None
-		- Segment of the audio to load.
-		- Example: 10 => First 10 seconds, (5, 10) => 5 to 10 seconds.
-		- Default: None => Entire audio.
-	mono: bool
-		- If True, loads the signal in mono.
-
-	Return
-	------
-	np.ndarray
-		- Audio signal.
+	audiofp: PathLike
+		- Audio filepath
+	
+	Returns
+	-------
 	int
-		- Sampling rate of the loaded audio signal.
-	title
-		- Title of the loaded audio.
-		- Filename without extension or YouTube title.
+		- Original sampling rate (hz)
+	int
+		- Number of channels
 	"""
-	# Check if the path is YouTube
-	if ".youtube." in str(path):
-		# Download the audio in temp directory using tempfile module
-		with tempfile.TemporaryDirectory() as tmpdir:
-			# Download
-			audio_fp: Path = download(url=path, content_type="audio", output_dir=Path(tmpdir))
-			
-			# Convert the audio to ".wav" form for loading
-			wav_audio_fp: Path = convert(inp_audio_fp=audio_fp, output_audio_fp=audio_fp.with_suffix(".wav"))
-			
-			# Load the audio in memory
-			audio_data, audio_sr = sf.read(wav_audio_fp)
-			title = audio_fp.stem
-	else:
-		# Check if the file exists
-		fp = Path(path)
+	ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
+	cmd = [ffmpeg_exe, "-i", str(path)]
+	proc = subprocess.run(cmd, stderr=subprocess.PIPE, text=True)
+	text = proc.stderr
+	
+	# Example parse: "Stream #0:0: Audio: mp3, 44100 Hz, stereo, ..."
+	m = re.search(r'Audio:.*?(\d+)\s*Hz.*?(mono|stereo)', text)
+	if not m:
+		raise RuntimeError("Could not parse audio info")
+	sr = int(m.group(1))
+	channels = 1 if m.group(2) == "mono" else 2
+	return sr, channels
+
+def _load_audio_from_youtube(url: str):
+	"""
+	Download audio from a YouTube URL, convert it to WAV, and return the path.
+
+	Parameters
+	----------
+	url : str
+		YouTube video URL.
+
+	Returns
+	-------
+	Path
+		Path to the converted WAV file (you can delete it later).
+	"""
+	from modusa.tools.youtube_downloader import download
+	from modusa.tools.audio_converter import convert
+	import tempfile
+	
+	# Temporary directory to hold files (auto-created, not auto-deleted)
+	tmpdir = Path(tempfile.mkdtemp())
+	
+	# Download YouTube audio (e.g. .m4a or .webm)
+	audio_fp: Path = download(url=url, content_type="audio", output_dir=tmpdir)
+	
+	# Convert downloaded file to .wav
+	wav_audio_fp: Path = convert(inp_audio_fp=audio_fp, output_audio_fp=audio_fp.with_suffix(".wav"))
+	
+	# Return path to the WAV file
+	return wav_audio_fp
+
+#---------------------
+# Main Function
+#---------------------
+def load(path, sr=None, trim=None, ch=None):
+	"""
+	Lightweight audio loader using imageio-ffmpeg.
+
+	Parameters
+	----------
+	path: PathLike/str/URL
+		- Path to the audio file / YouTube video
+	sr: int
+		- Sampling rate to load the audio in.
+		- Default: None => Use the original sampling rate
+	trim: tuple[number, number]
+		- (start, end) in seconds to trim the audio clip.
+		- Default: None => No trimming
+	ch: int
+		- 1 for mono and 2 for stereo
+		- Default: None => Use the original number of channels.
+
+	Returns
+	-------
+	np.ndarray
+		- Audio signal Float32 waveform in [-1, 1].
+	int:
+		Sampling rate.
+	str:
+		File name stem.
+	"""
+	path = Path(path)
+	ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
+	
+	yt = False # Is the path a youtube URL
+	
+	if ".youtube" in str(path):
+		yt = True
+		try:
+			path: Path = _load_audio_from_youtube(url=str(path))
+		except Exception as e:
+			raise ConnectionRefusedError("unable to download from YouTube")
+	
+	# Find the real sample rate from the file
+	if sr is None:
+		sr, _ = _get_audio_info_ffmpeg(path)
+		if not (sr > 100 and sr < 80000):
+			raise Exception(f"Error reading the metadata for original sampling rate {sr}, please set `sr` explicitly")
+	
+	# Find the real number of channels from the file
+	if ch is None:
+		_, ch = _get_audio_info_ffmpeg(path)
 		
-		if not fp.exists():
-			raise FileNotFoundError(f"{path} does not exist.")
-			
-		# Load the audio in memory
-		audio_data, audio_sr = sf.read(fp)
-		title = fp.stem
+		if ch not in [1, 2]:
+			raise Exception(f"Error reading the metadata for number of channels {ch}, please set `ch` explicitly")
 		
-	# Convert to mono if requested and it's multi-channel
-	if mono and audio_data.ndim > 1:
-		audio_data = audio_data.mean(axis=1)
-		
-	# Resample if needed
-	if sr is not None and audio_sr != sr:
-		n_samples = int(len(audio_data) * sr / audio_sr)
-		
-		if audio_data.ndim == 1:
-			# Mono
-			audio_data = resample(audio_data, n_samples)
-		else:
-			# Stereo or multi-channel: resample each channel independently
-			audio_data = np.stack([
-				resample(audio_data[:, ch], n_samples)
-				for ch in range(audio_data.shape[1])
-			], axis=1)
-			
-		audio_sr = sr
-		
-	# Trim if requested
+	cmd = [ffmpeg_exe]
+	
+	# Optional trimming
 	if trim is not None:
-		if isinstance(trim, (int, float)):
-			trim = (0, trim)
-		elif isinstance(trim, tuple) and len(trim) > 1:
-			trim = (trim[0], trim[1])
-		else:
-			raise ValueError(f"Invalid trim type or length: {type(trim)}, len={len(trim)}")
-			
-		start = int(trim[0] * audio_sr)
-		end = int(trim[1] * audio_sr)
-		audio_data = audio_data[start:end]
+		start, end = trim
+		duration = end - start
+		cmd += ["-ss", str(start), "-t", str(duration)]
 		
-	# Clip to avoid out-of-range playback issues
-	if np.issubdtype(audio_data.dtype, np.floating):
-		audio_data = np.clip(audio_data, -1.0, 1.0)
+	cmd += ["-i", str(path), "-f", "s16le", "-acodec", "pcm_s16le"]
+	cmd += ["-ar", str(sr)]
+	cmd += ["-ac", str(ch)]
 		
-	return audio_data.T, audio_sr, title
+	cmd += ["-"]
+	
+	proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+	raw = proc.stdout.read()
+	proc.wait()
+	
+	audio = np.frombuffer(raw, np.int16).astype(np.float32) / 32768.0
+	
+	# Stereo reshaping if forced
+	if ch == 2:
+		audio = audio.reshape(-1, 2).T
+		
+	# Delete the file if downloaded from youtube
+	if yt:
+		path.unlink(missing_ok=True)
+		path.parent.rmdir()
+		
+	return audio, sr, path.stem
