@@ -99,12 +99,19 @@ def load(path, sr=None, trim=None, ch=None):
 		File name stem.
 	"""
 	path = Path(path)
-	ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
 	
-	yt = False # Is the path a youtube URL
-	
+	# If the path is a YouTube URL, turn on the yt flag
+	yt = False # By default, set to false
 	if ".youtube" in str(path):
 		yt = True
+	
+	# For local files, check if the audio exists
+	elif not path.exists():
+		raise FileExistsError(f"{path} does not exist")
+	
+	ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
+	
+	if yt:
 		try:
 			path: Path = _load_audio_from_youtube(url=str(path))
 		except Exception as e:
