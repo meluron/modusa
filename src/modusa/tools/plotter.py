@@ -539,7 +539,7 @@ class Fig:
 				text_obj = curr_row[0].text(
 					(start + end) / 2, text_yloc, tag,
 					ha='center', va='center',
-					fontsize=10, color="black", fontweight='bold', zorder=10, clip_on=True
+					fontsize=9, color="black", zorder=10, clip_on=True
 				)
 				
 				text_obj.set_clip_path(rect)
@@ -556,7 +556,7 @@ class Fig:
 				text_obj = curr_row[0].text(
 					(start + end) / 2, text_yloc, tag,
 					ha='center', va='center',
-					fontsize=10, color="black", fontweight='bold', zorder=10, clip_on=True
+					fontsize=9, color="black", zorder=10, clip_on=True
 				)
 				
 				text_obj.set_clip_path(rect)
