@@ -8,4 +8,6 @@ from modusa.tools import play, convert, record, save
 from modusa.tools import download
 from modusa.tools import load, load_ann
 
-__version__ = "0.4.27"
+from modusa.tools import synth_f0
+
+__version__ = "0.4.28"

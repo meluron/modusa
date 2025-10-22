@@ -10,3 +10,5 @@ from .audio_recorder import record
 
 from .plotter import Fig as fig
 from .plotter import dist_plot, hill_plot, plot
+
+from .synth import synth_f0
