@@ -32,3 +32,16 @@ build-backend = "pdm.backend"
 [tool.pdm]
 distribution = true
 package-dir = {"" = "src"}
+
+[tool.pdm.build]
+includes = ["src", "README.md", "LICENSE.md", "pyproject.toml"]
+excludes = [
+    "tests/**",
+    "**/.DS_Store",
+    "__pycache__/**",
+    "*.pyc",
+    "dist",
+    "build",
+    ".venv",
+    ".git",
+]
