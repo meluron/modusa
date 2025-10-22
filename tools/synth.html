@@ -3,11 +3,11 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Annotation Loader" href="ann_loader.html"><link rel="prev" title="Tools" href="index.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>Audio Loader - modusa 0.4.28 documentation</title>
+        <title>Synthesizer - modusa 0.4.28 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -203,9 +203,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../quicktour/qg.html">Quick Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Tools</a><input aria-label="Toggle navigation of Tools" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Audio Loader</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="index.html">Tools</a><input aria-label="Toggle navigation of Tools" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="audio_loader.html">Audio Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann_loader.html">Annotation Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audio_converter.html">Audio Convertor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audio_player.html">Audio Player</a></li>
@@ -235,7 +235,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/tools/audio_loader.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/tools/synth.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -253,45 +253,47 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="audio-loader">
-<h1>Audio Loader<a class="headerlink" href="#audio-loader" title="Link to this heading">¶</a></h1>
+          <section id="synthesizer">
+<h1>Synthesizer<a class="headerlink" href="#synthesizer" title="Link to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="modusa.load">
-<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/audio_loader.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.load" title="Link to this definition">¶</a></dt>
-<dd><p>Lightweight audio loader using imageio-ffmpeg.</p>
+<dt class="sig sig-object py" id="modusa.synth_f0">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">synth_f0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f0t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nharm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/synth.html#synth_f0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.synth_f0" title="Link to this definition">¶</a></dt>
+<dd><p>Synthesize f0 contour so that you can
+hear it back.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>PathLike/str/URL</em>) – <ul>
-<li><p>Path to the audio file / YouTube video</p></li>
+<li><p><strong>f0</strong> (<em>ndarray</em>) – <ul>
+<li><p>Fundamental frequency (f0) contour in Hz.</p></li>
+</ul>
+</p></li>
+<li><p><strong>f0t</strong> (<em>ndarray</em>) – <ul>
+<li><p>Timestamps in seconds</p></li>
 </ul>
 </p></li>
 <li><p><strong>sr</strong> (<em>int</em>) – <ul>
-<li><p>Sampling rate to load the audio in.</p></li>
-<li><p>Default: None =&gt; Use the original sampling rate</p></li>
+<li><p>Sampling rate in Hz for the synthesized audio.</p></li>
 </ul>
 </p></li>
-<li><p><strong>trim</strong> (<em>tuple</em><em>[</em><em>number</em><em>, </em><em>number</em><em>]</em>) – <ul>
-<li><p>(start, end) in seconds to trim the audio clip.</p></li>
-<li><p>Default: None =&gt; No trimming</p></li>
-</ul>
-</p></li>
-<li><p><strong>ch</strong> (<em>int</em>) – <ul>
-<li><p>1 for mono and 2 for stereo</p></li>
-<li><p>Default: None =&gt; Use the original number of channels.</p></li>
+<li><p><strong>nharm</strong> (<em>int</em>) – <ul>
+<li><p>Number of harmonics</p></li>
+<li><p>Default: 0 =&gt; Only fundamental frequency (No harmonics)</p></li>
 </ul>
 </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>np.ndarray</em> –</p>
+<li><p><em>ndarray</em> –</p>
 <ul>
-<li><p>Audio signal Float32 waveform in [-1, 1].</p></li>
+<li><p>Syntesized audio.</p></li>
 </ul>
 </li>
-<li><p><em>int</em> – Sampling rate.</p></li>
-<li><p><em>str</em> – File name stem.</p></li>
+<li><p><em>sr</em> –</p>
+<ul>
+<li><p>Sampling rate of the synthesized audio</p></li>
+</ul>
+</li>
 </ul>
 </p>
 </dd>
@@ -305,26 +307,8 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="ann_loader.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Annotation Loader</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Tools</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -355,8 +339,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Audio Loader</a><ul>
-<li><a class="reference internal" href="#modusa.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li><a class="reference internal" href="#">Synthesizer</a><ul>
+<li><a class="reference internal" href="#modusa.synth_f0"><code class="docutils literal notranslate"><span class="pre">synth_f0()</span></code></a></li>
 </ul>
 </li>
 </ul>
