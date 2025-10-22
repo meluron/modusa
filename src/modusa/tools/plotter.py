@@ -31,7 +31,7 @@ def _load_devanagari_font():
 	hindi_font = fm.FontProperties(fname=str(font_path))
 	
 	# Set as default rcParam
-	mpl.rcParams['font.family'] = hindi_font.get_name()
+	mpl.rcParams['font.family'] = [hindi_font.get_name(), 'DejaVu Sans'] # Fallback to DejaVu Sans
 
 #==============
 
