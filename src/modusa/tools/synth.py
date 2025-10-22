@@ -6,6 +6,8 @@
 # Email: ankit0.anand0@gmail.com
 #---------------------------------
 
+import numpy as np
+
 def synth_f0(f0, f0t, sr, nharm=0):
 	"""
 	Synthesize f0 contour so that you can

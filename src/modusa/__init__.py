@@ -10,4 +10,4 @@ from modusa.tools import load, load_ann
 
 from modusa.tools import synth_f0
 
-__version__ = "0.4.28"
+__version__ = "0.4.29"
