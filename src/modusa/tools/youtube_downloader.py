@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 
 
-from modusa import excp
-from modusa.decorators import validate_args_type
-from modusa.tools.base import ModusaTool
 from typing import Any
 from pathlib import Path
 import yt_dlp
@@ -66,7 +63,7 @@ def download(url, content_type, output_dir):
 			info = ydl.extract_info(url, download=True)
 			return Path(info['requested_downloads'][0]['filepath'])
 	else:
-		raise excp.InputValueError(f"`content_type` can either take 'audio' or 'video' not {content_type}")
+		raise ValueError(f"`content_type` can either take 'audio' or 'video' not {content_type}")
 
 	
 	

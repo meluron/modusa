@@ -1,5 +1,3 @@
-from modusa.utils import excp, config
-
 #=====Giving access to plot functions to plot multiple signals.=====
 from modusa.tools import dist_plot, hill_plot, plot, fig
 #=====
