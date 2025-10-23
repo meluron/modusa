@@ -21,7 +21,6 @@ def save_ann(ann, output_fp):
 		- Filepath to save the annotation.
 	"""
 	
-	
 	output_fp = Path(output_fp)
 	output_fp.parent.mkdir(parents=True, exist_ok=True)
 	

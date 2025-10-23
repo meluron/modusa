@@ -5,7 +5,7 @@
 groups = ["default", "docs", "misc", "profiling", "test", "upload"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:5e09f3b8c783e61538cad400ce647eb1e28db923f9ab78420165f7d6cd3f452d"
+content_hash = "sha256:fb541cd5d88e9744decc09225c8bf63629cdf448c8bc836d96ef8b5400e7b7b4"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -3208,13 +3208,13 @@ files = [
 
 [[package]]
 name = "yt-dlp"
-version = "2025.9.23"
-requires_python = ">=3.9"
+version = "2025.10.22"
+requires_python = ">=3.10"
 summary = "A feature-rich command-line audio/video downloader"
 groups = ["default"]
 files = [
-    {file = "yt_dlp-2025.9.23-py3-none-any.whl", hash = "sha256:84e36acf2dfbadb307d734a590dd937923173b13c57cf45a662f40c93e746302"},
-    {file = "yt_dlp-2025.9.23.tar.gz", hash = "sha256:9282ad1deadb4c90b2e6d3bcf9f360abf88c5f2e4ba836dad7b51387b086d757"},
+    {file = "yt_dlp-2025.10.22-py3-none-any.whl", hash = "sha256:9c803a9598859f91d0d5bd3337f1506ecb40bbe97f6efbe93bc4461fed344fb2"},
+    {file = "yt_dlp-2025.10.22.tar.gz", hash = "sha256:db2d48133222b1d9508c6de757859c24b5cefb9568cf68ccad85dac20b07f77b"},
 ]
 
 [[package]]

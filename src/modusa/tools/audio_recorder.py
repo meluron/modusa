@@ -6,7 +6,6 @@
 # Email: ankit0.anand0@gmail.com
 #---------------------------------
 
-
 import sounddevice as sd
 import numpy as np
 import ipywidgets as widgets
