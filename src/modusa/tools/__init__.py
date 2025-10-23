@@ -17,3 +17,6 @@ from .plotter import dist_plot, hill_plot, plot
 
 # Synthesizing related
 from .synth import synth_f0
+
+# Audio features
+from .audio_stft import stft
