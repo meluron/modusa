@@ -9,7 +9,7 @@ from modusa.tools import load_ann, save_ann
 from modusa.tools import dist_plot, hill_plot, plot, fig
 
 # Synthsizing related
-from modusa.tools import synth_f0
+from modusa.tools import synth_f0, synth_clicks
 
 # Audio features related
 from modusa.tools import stft

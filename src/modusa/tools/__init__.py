@@ -16,7 +16,7 @@ from .plotter import Fig as fig
 from .plotter import dist_plot, hill_plot, plot
 
 # Synthesizing related
-from .synth import synth_f0
+from .synth import synth_f0, synth_clicks
 
 # Audio features
 from .audio_stft import stft
