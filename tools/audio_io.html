@@ -3,11 +3,11 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="Synthesizer" href="synth.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Annotation" href="annotation.html"><link rel="prev" title="Tools" href="index.html">
         <link rel="prefetch" href="../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>Youtube Downloader - modusa 0.4.32 documentation</title>
+        <title>Audio IO - modusa 0.4.32 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -205,12 +205,12 @@
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Tools</a><input aria-label="Toggle navigation of Tools" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="audio_io.html">Audio IO</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Audio IO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="annotation.html">Annotation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audio_feature.html">Audio Feature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotter.html">Plotter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="synth.html">Synthesizer</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Youtube Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="youtube_downloader.html">Youtube Downloader</a></li>
 </ul>
 </li>
 </ul>
@@ -233,7 +233,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/tools/youtube_downloader.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/tools/audio_io.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -251,37 +251,162 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="youtube-downloader">
-<h1>Youtube Downloader<a class="headerlink" href="#youtube-downloader" title="Link to this heading">¶</a></h1>
+          <section id="audio-io">
+<h1>Audio IO<a class="headerlink" href="#audio-io" title="Link to this heading">¶</a></h1>
+<section id="audio-loader">
+<h2>Audio Loader<a class="headerlink" href="#audio-loader" title="Link to this heading">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="modusa.download">
-<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/youtube_downloader.html#download"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.download" title="Link to this definition">¶</a></dt>
-<dd><p>Downloads audio/video from YouTube.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># To download audio</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">modusa</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ms</span>
-<span class="n">audio_fp</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">download</span><span class="p">(</span>
-        <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://www.youtube.com/watch?v=lIpw9-Y_N0g&quot;</span><span class="p">,</span>
-        <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span>
-        <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<dt class="sig sig-object py" id="modusa.load">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/audio_loader.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.load" title="Link to this definition">¶</a></dt>
+<dd><p>Lightweight audio loader using imageio-ffmpeg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>PathLike/str/URL</em>) – <ul>
+<li><p>Path to the audio file / YouTube video</p></li>
+</ul>
+</p></li>
+<li><p><strong>sr</strong> (<em>int</em>) – <ul>
+<li><p>Sampling rate to load the audio in.</p></li>
+<li><p>Default: None =&gt; Use the original sampling rate</p></li>
+</ul>
+</p></li>
+<li><p><strong>trim</strong> (<em>tuple</em><em>[</em><em>number</em><em>, </em><em>number</em><em>]</em>) – <ul>
+<li><p>(start, end) in seconds to trim the audio clip.</p></li>
+<li><p>Default: None =&gt; No trimming</p></li>
+</ul>
+</p></li>
+<li><p><strong>ch</strong> (<em>int</em>) – <ul>
+<li><p>1 for mono and 2 for stereo</p></li>
+<li><p>Default: None =&gt; Use the original number of channels.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.ndarray</em> –</p>
+<ul>
+<li><p>Audio signal Float32 waveform in [-1, 1].</p></li>
+</ul>
+</li>
+<li><p><em>int</em> – Sampling rate.</p></li>
+<li><p><em>str</em> – File name stem.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="audio-player">
+<h2>Audio Player<a class="headerlink" href="#audio-player" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modusa.play">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/audio_player.html#play"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.play" title="Link to this definition">¶</a></dt>
+<dd><p>Audio player with optional clip selection, transcription-style label.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>ndarray</em>) – <ul>
+<li><p>Audio signal.</p></li>
+</ul>
+</p></li>
+<li><p><strong>sr</strong> (<em>float</em>) – <ul>
+<li><p>Sampling rate.</p></li>
+</ul>
+</p></li>
+<li><p><strong>clip</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>) – <ul>
+<li><p>The portion from the audio signal to be played.</p></li>
+</ul>
+</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> | </em><em>None</em>) – <ul>
+<li><p>Could be transcription/labels attached to the audio.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="audio-recorder">
+<h2>Audio Recorder<a class="headerlink" href="#audio-recorder" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modusa.record">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">record</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/audio_recorder.html#record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.record" title="Link to this definition">¶</a></dt>
+<dd><p>Create a UI to record audio in jupyter notebook, the
+recorded signal is available as array.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">modusa</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ms</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">record</span><span class="p">()</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">result</span><span class="p">()</span> <span class="c1"># Keep it in the next cell</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A lambda function that returns y(audio signal), sr(sampling rate), title(title set in the UI)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="audio-convertor">
+<h2>Audio Convertor<a class="headerlink" href="#audio-convertor" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modusa.convert">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_audio_fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_audio_fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mono</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="../_modules/modusa/tools/audio_converter.html#convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.convert" title="Link to this definition">¶</a></dt>
+<dd><p>Converts an audio file from one format to another using FFmpeg.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">modusa</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ms</span>
+<span class="n">converted_audio_fp</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span>
+        <span class="n">inp_audio_fp</span><span class="o">=</span><span class="s2">&quot;path/to/input/audio.webm&quot;</span><span class="p">,</span>
+        <span class="n">output_audio_fp</span><span class="o">=</span><span class="s2">&quot;path/to/output/audio.wav&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> (<em>str</em>) – Link to the YouTube video.</p></li>
-<li><p><strong>content_type</strong> (<em>str</em>) – “audio” or “video”</p></li>
-<li><p><strong>output_dir</strong> (<em>str</em><em> | </em><em>Path</em>) – Directory to save the YouTube content.</p></li>
+<li><p><strong>inp_audio_fp</strong> (<em>str</em><em> | </em><em>Path</em>) – <ul>
+<li><p>Filepath of audio to be converted.</p></li>
+</ul>
+</p></li>
+<li><p><strong>output_audio_fp</strong> (<em>str</em><em> | </em><em>Path</em>) – <ul>
+<li><p>Filepath of the converted audio. (e.g. name.mp3)</p></li>
+</ul>
+</p></li>
+<li><p><strong>sr</strong> (<em>int</em><em> | </em><em>float</em>) – <ul>
+<li><p>Resample it to any target sampling rate.</p></li>
+<li><p>Default: None =&gt; Keep the original sample rate.</p></li>
+</ul>
+</p></li>
+<li><p><strong>mono</strong> (<em>bool</em>) – <ul>
+<li><p>Do you want to convert the audio into mono?</p></li>
+<li><p>Default: False</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>File path of the downloaded content.</p>
+<dd class="field-even"><p>Filepath of the converted audio.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Path</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The conversion takes place based on the extensions of the input and output audio filepath.</p></li>
+</ul>
+</div>
 </dd></dl>
 
+</section>
 </section>
 
         </article>
@@ -289,15 +414,23 @@
       <footer>
         
         <div class="related-pages">
-          
-          <a class="prev-page" href="synth.html">
+          <a class="next-page" href="annotation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Annotation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Synthesizer</div>
+                <div class="title">Tools</div>
                 
               </div>
             </a>
@@ -331,8 +464,23 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Youtube Downloader</a><ul>
-<li><a class="reference internal" href="#modusa.download"><code class="docutils literal notranslate"><span class="pre">download()</span></code></a></li>
+<li><a class="reference internal" href="#">Audio IO</a><ul>
+<li><a class="reference internal" href="#audio-loader">Audio Loader</a><ul>
+<li><a class="reference internal" href="#modusa.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#audio-player">Audio Player</a><ul>
+<li><a class="reference internal" href="#modusa.play"><code class="docutils literal notranslate"><span class="pre">play()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#audio-recorder">Audio Recorder</a><ul>
+<li><a class="reference internal" href="#modusa.record"><code class="docutils literal notranslate"><span class="pre">record()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#audio-convertor">Audio Convertor</a><ul>
+<li><a class="reference internal" href="#modusa.convert"><code class="docutils literal notranslate"><span class="pre">convert()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
