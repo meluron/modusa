@@ -300,6 +300,53 @@ hear it back.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="modusa.synth_clicks">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">synth_clicks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nharm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">click_duration_ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/synth.html#synth_clicks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.synth_clicks" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a train of short sine wave clicks with harmonics at specified event times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_times</strong> (<em>array-like</em>) – <ul>
+<li><p>Times of events in seconds where clicks should be placed.</p></li>
+</ul>
+</p></li>
+<li><p><strong>sr</strong> (<em>int</em>) – <ul>
+<li><p>Sampling rate in Hz.</p></li>
+</ul>
+</p></li>
+<li><p><strong>freq</strong> (<em>float</em><em>, </em><em>optional</em>) – <ul>
+<li><p>Fundamental frequency of the sine click in Hz. Default is 500 Hz.</p></li>
+</ul>
+</p></li>
+<li><p><strong>nharm</strong> (<em>int</em><em> | </em><em>None</em>) – <ul>
+<li><p>Number of harmonics to include (including fundamental). Default is 4.</p></li>
+</ul>
+</p></li>
+<li><p><strong>click_duration_ms</strong> (<em>float</em><em> | </em><em>None</em>) – <ul>
+<li><p>Duration of each click in milliseconds. Default is 5 ms.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.ndarray</em> –</p>
+<ul>
+<li><p>Audio signal with sine wave clicks (with harmonics) at event times.</p></li>
+</ul>
+</li>
+<li><p><em>int</em> –</p>
+<ul>
+<li><p>Sampling rate of the generated click audio.</p></li>
+</ul>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -341,6 +388,7 @@ hear it back.</p>
             <ul>
 <li><a class="reference internal" href="#">Synthesizer</a><ul>
 <li><a class="reference internal" href="#modusa.synth_f0"><code class="docutils literal notranslate"><span class="pre">synth_f0()</span></code></a></li>
+<li><a class="reference internal" href="#modusa.synth_clicks"><code class="docutils literal notranslate"><span class="pre">synth_clicks()</span></code></a></li>
 </ul>
 </li>
 </ul>
