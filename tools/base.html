@@ -7,7 +7,7 @@
         <link rel="prefetch" href="../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>ModusaTool - modusa 0.4.29 documentation</title>
+        <title>ModusaTool - modusa 0.4.31 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -165,7 +165,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">modusa 0.4.29 documentation</div></a>
+      <a href="../index.html"><div class="brand">modusa 0.4.31 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -176,7 +176,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -189,7 +189,7 @@
     <img class="sidebar-logo" src="../_static/icon.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">modusa 0.4.29 documentation</span>
+  <span class="sidebar-brand-text">modusa 0.4.31 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -248,48 +248,13 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
           <section id="modusatool">
 <h1>ModusaTool<a class="headerlink" href="#modusatool" title="Link to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="modusa.tools.base.ModusaTool">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modusa.tools.base.</span></span><span class="sig-name descname"><span class="pre">ModusaTool</span></span><a class="reference internal" href="../_modules/modusa/tools/base.html#ModusaTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.tools.base.ModusaTool" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Base class for all tool: youtube downloader, audio converter, filter.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modusa</span><span class="o">-</span><span class="n">dev</span> <span class="n">create</span> <span class="n">io</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># General template of a subclass of ModusaTool</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">modusa.tools.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModusaTool</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MyCustomIOClass</span><span class="p">(</span><span class="n">ModusaIO</span><span class="p">):</span>
-        <span class="c1">#--------Meta Information----------</span>
-        <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;My Custom Tool&quot;</span>
-        <span class="n">_description</span> <span class="o">=</span> <span class="s2">&quot;My custom class for Tool.&quot;</span>
-        <span class="n">_author_name</span> <span class="o">=</span> <span class="s2">&quot;Ankit Anand&quot;</span>
-        <span class="n">_author_email</span> <span class="o">=</span> <span class="s2">&quot;ankit0.anand0@gmail.com&quot;</span>
-        <span class="n">_created_at</span> <span class="o">=</span> <span class="s2">&quot;2025-07-06&quot;</span>
-        <span class="c1">#----------------------------------</span>
-
-        <span class="nd">@staticmethod</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">do_something</span><span class="p">():</span>
-                <span class="k">pass</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>This class is intended to be subclassed by any tool built for the modusa framework.</p></li>
-<li><p>In order to create a tool, you can use modusa-dev CLI to generate a template.</p></li>
-<li><p>It is recommended to treat subclasses of ModusaTool as namespaces and define &#64;staticmethods with control parameters, rather than using instance-level __init__ methods.</p></li>
-</ul>
-</div>
-</dd></dl>
-
 </section>
 
         </article>
@@ -317,32 +282,13 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">ModusaTool</a><ul>
-<li><a class="reference internal" href="#modusa.tools.base.ModusaTool"><code class="docutils literal notranslate"><span class="pre">ModusaTool</span></code></a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8370524a"></script>
+</div><script src="../_static/documentation_options.js?v=6d5c66a4"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

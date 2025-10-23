@@ -3,11 +3,11 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Audio Loader" href="audio_loader.html"><link rel="prev" title="&lt;/&gt;" href="../quicktour/qg.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
         <link rel="prefetch" href="../_static/icon.png" as="image">
 
     <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
-        <title>Tools - modusa 0.4.31 documentation</title>
+        <title>Audio STFT - modusa 0.4.31 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -176,7 +176,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -203,8 +203,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../quicktour/qg.html">Quick Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Tools</a><input aria-label="Toggle navigation of Tools" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="index.html">Tools</a><input aria-label="Toggle navigation of Tools" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="audio_loader.html">Audio Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ann_loader.html">Annotation Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="audio_converter.html">Audio Convertor</a></li>
@@ -235,7 +235,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/tools/index.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/tools/audio_stft.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -248,25 +248,68 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="tools">
-<h1>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="audio_loader.html">Audio Loader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ann_loader.html">Annotation Loader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="audio_converter.html">Audio Convertor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="audio_player.html">Audio Player</a></li>
-<li class="toctree-l1"><a class="reference internal" href="audio_recorder.html">Audio Recorder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="audio_saver.html">Audio Saver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plotter.html">Plotter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="youtube_downloader.html">Youtube Downloader</a></li>
+          <section id="audio-stft">
+<h1>Audio STFT<a class="headerlink" href="#audio-stft" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="modusa.stft">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">stft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">winlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hoplen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/modusa/tools/audio_stft.html#stft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.stft" title="Link to this definition">¶</a></dt>
+<dd><p>Compute spectrogram with just numpy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>ndarray</em>) – <ul>
+<li><p>Audio signal.</p></li>
 </ul>
-</div>
+</p></li>
+<li><p><strong>sr</strong> (<em>int</em>) – <ul>
+<li><p>Sampling rate of the audio signal.</p></li>
+</ul>
+</p></li>
+<li><p><strong>winlen</strong> (<em>int</em>) – <ul>
+<li><p>Window length in samples.</p></li>
+<li><p>Default: None =&gt; set at 0.064 sec</p></li>
+</ul>
+</p></li>
+<li><p><strong>hoplen</strong> (<em>int</em>) – <ul>
+<li><p>Hop length in samples.</p></li>
+<li><p>Default: None =&gt; set at one-forth of winlen</p></li>
+</ul>
+</p></li>
+<li><p><strong>gamma</strong> (<em>int</em><em> | </em><em>None</em>) – <ul>
+<li><p>Log compression factor.</p></li>
+<li><p>Add contrast to the plot.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> –</p>
+<ul>
+<li><p>Spectrogram matrix, complex is gamma is None else real</p></li>
+</ul>
+</li>
+<li><p><em>ndarray</em> –</p>
+<ul>
+<li><p>Frequency bins in Hz.</p></li>
+</ul>
+</li>
+<li><p><em>ndarray</em> –</p>
+<ul>
+<li><p>Timeframes in sec.</p></li>
+</ul>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -274,26 +317,8 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="audio_loader.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Audio Loader</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="../quicktour/qg.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">&lt;/&gt;</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -312,8 +337,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Audio STFT</a><ul>
+<li><a class="reference internal" href="#modusa.stft"><code class="docutils literal notranslate"><span class="pre">stft()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
