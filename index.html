@@ -176,7 +176,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -199,8 +199,8 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Quick Tour to Modusa</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference external" href="https://meluron.github.io/devquest/htmls/MODUSA-%5B01%5D_A_Quick_Guide.html">How to use modusa?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quicktour/evolution.html">Evolution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quicktour/qg.html">Quick Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
@@ -246,19 +246,56 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
           <section id="modusa">
-<h1>MODUSA<a class="headerlink" href="#modusa" title="Link to this heading">¶</a></h1>
-<p>A python library with utility tools designed especially for audio signals.</p>
+<h1>modusa<a class="headerlink" href="#modusa" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">modusa</span></code> is a Python library for streamlined <strong>audio analysis</strong> designed for musicians, researchers, and engineers working in <strong>MIR</strong> and <strong>speech analysis</strong>.</p>
+<p>It offers purpose-built tools for the audio domain, combining <strong>audio loading</strong>, <strong>annotation handling</strong>, <strong>visualization</strong>, and <strong>analysis</strong> in a unified, easy-to-use API.
+<code class="docutils literal notranslate"><span class="pre">modusa</span></code> simplifies common workflows so you can focus on <strong>experimentation and insight</strong>, not boilerplate code.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Flexible Audio Loader</strong></dt><dd><p>Load audio in multiple formats (<code class="docutils literal notranslate"><span class="pre">WAV</span></code>, <code class="docutils literal notranslate"><span class="pre">MP3</span></code>, <code class="docutils literal notranslate"><span class="pre">FLAC</span></code>, <code class="docutils literal notranslate"><span class="pre">M4A</span></code>, <code class="docutils literal notranslate"><span class="pre">AAC</span></code>, <code class="docutils literal notranslate"><span class="pre">OPUS</span></code>, <code class="docutils literal notranslate"><span class="pre">AIFF</span></code>) — even directly from YouTube links.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Unified Annotation Interface</strong></dt><dd><p>Work with <code class="docutils literal notranslate"><span class="pre">.txt</span></code> (Audacity labels) and <code class="docutils literal notranslate"><span class="pre">.ctm</span></code> (ASR/FA outputs) annotations seamlessly. <code class="docutils literal notranslate"><span class="pre">TextGrid</span></code> support coming soon.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Modular Plotter</strong></dt><dd><p>Create time-aligned visualizations combining waveforms, annotations, and spectrograms with minimal code.
+Supports multi-tier figures, dark mode, legends, tier IDs, and grouped color patterns.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Interactive Audio Player</strong></dt><dd><p>Play audio with visible annotation labels directly inside notebooks.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Built-in Audio Recorder</strong></dt><dd><p>Capture and instantly analyze microphone input from within Jupyter.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Analytical Tools</strong></dt><dd><p>Includes quick plotting utilities like distribution (hill) plots for comparing numerical features.</p>
+</dd>
+</dl>
+</li>
+</ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Quick Tour to Modusa</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference external" href="https://meluron.github.io/devquest/htmls/MODUSA-%5B01%5D_A_Quick_Guide.html">How to use modusa?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quicktour/evolution.html">Evolution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quicktour/qg.html">Quick Guide</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -267,6 +304,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tools/index.html">Tools</a></li>
 </ul>
 </div>
+</section>
 </section>
 
         </article>
@@ -302,8 +340,29 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">modusa</a><ul>
+<li><a class="reference internal" href="#key-features">Key Features</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -315,7 +374,5 @@
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>
