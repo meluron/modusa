@@ -1,0 +1,703 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Synthesizer" href="synthesizer.html"><link rel="prev" title="Loader" href="loader.html">
+        <link rel="prefetch" href="_static/icon.png" as="image">
+
+    <!-- Generated with Sphinx 8.1.2 and Furo 2025.09.25 -->
+        <title>Visualizer - modusa 0.9.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=147c2655" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">modusa 0.9.12 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/icon.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">modusa 0.9.12 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Quick Tour to Modusa</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://meluron.github.io/devquest/htmls/Modusa-[C01]_-_A_Quick_Guide_on_Modusa.html">How to use modusa?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="loader.html">Loader</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Visualizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synthesizer.html">Synthesizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mediaplayer.html">Media Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mediarecorder.html">Media Recorder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saver.html">Saver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_extractor.html">Feature Extractor</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/visualizer.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="visualizer">
+<h1>Visualizer<a class="headerlink" href="#visualizer" title="Link to this heading">¶</a></h1>
+<p>The visualizer module helps you present your data clearly and consistently.
+It provides a simple, three-step workflow for creating visual layouts:</p>
+<ol class="arabic simple">
+<li><p><strong>Select a figure layout</strong>: Choose from preset layouts such as tiers, grids, stacks, or cartesian.</p></li>
+<li><p><strong>Configure it</strong>: Adjust parameters like size, overlap, and axis limits.</p></li>
+<li><p><strong>Paint the figure</strong>: Use the painter API to draw signals, annotations, and other elements.</p></li>
+</ol>
+<section id="figure-layouts">
+<h2>Figure Layouts<a class="headerlink" href="#figure-layouts" title="Link to this heading">¶</a></h2>
+<p>The following layout presets are available:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.figlayouts.tracks">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">figlayouts.</span></span><span class="sig-name descname"><span class="pre">tracks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hspace_inches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.figlayouts.tracks" title="Link to this definition">¶</a></dt>
+<dd><p>Create a Praat-style multi-track figure layout where all tracks share the same x-axis
+(typically representing time), with consistent physical heights and uniform spacing
+between tracks.</p>
+<p>This method provides a flexible and publication-ready layout generator for
+time-aligned visualizations such as signals, annotations, and spectrograms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>str</em>) – <p>A string specifying the types and order of tracks to display.
+Each character represents one track:
+- “a”: auxiliary track (e.g., annotation, pitch, energy, etc.)
+- “s”: signal track (e.g., waveform)
+- “m”: matrix track (e.g., spectrogram, feature matrix)
+Example:</p>
+<blockquote>
+<div><p>”asm” → one auxiliary track, one signal track, one matrix track.</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>ylims</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of (min, max) pairs specifying y-axis limits for each track.
+Length must match the number of tracks if provided.</p></li>
+<li><p><strong>xlim</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – The x-axis limit shared across all tracks.</p></li>
+<li><p><strong>ylabels</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of y-axis labels for each track.</p></li>
+<li><p><strong>xlabels</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of x-axis labels for each track.</p></li>
+<li><p><strong>titles</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of titles for each track.</p></li>
+<li><p><strong>grid</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Adds gridlines to the tracks.</p></li>
+<li><p><strong>fig_width</strong> (<em>float</em><em>, </em><em>default=18</em>) – Total figure width (in inches).</p></li>
+<li><p><strong>hspace_inches</strong> (<em>float</em><em>, </em><em>default=0.4</em>) – Vertical gap (in inches) between consecutive tracks.
+This is converted internally to a relative spacing value to preserve
+exact physical spacing across configurations.</p></li>
+<li><p><strong>abc</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to label each subplot with a small reference tag (e.g., “(a)”, “(b)”, “(c)”)
+for research paper style referencing.</p></li>
+<li><p><strong>fig_num</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>float</em><em>, </em><em>default=&quot;&quot;</em>) – Optional prefix to the alphabetical subplot labels, e.g. “1a”, “2b”, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – The created Matplotlib Figure object.</p></li>
+<li><p><strong>axs</strong> (<em>numpy.ndarray of matplotlib.axes.Axes</em>) – A 2D array of Axes objects of shape (n_tracks, 2), where column 0 contains
+the actual tracks and column 1 is reserved for colorbars (for matrix plots).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.figlayouts.collage">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">figlayouts.</span></span><span class="sig-name descname"><span class="pre">collage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hspace_inches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wspace_inches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.figlayouts.collage" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a 2D grid-style figure layout (collage) for displaying multiple subplots.</p>
+<p>This function creates a uniform grid of subplots (rows × columns) for visualizing
+multiple plots side by side in a consistent layout. It supports per-subplot customization
+for axis limits, labels, and titles, along with options for grids, tick removal, and
+alphabetical subplot tagging for research-style figures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Grid configuration in the form <cite>(n_rows, n_cols)</cite>.</p></li>
+<li><p><strong>size</strong> (<em>float</em><em>, </em><em>default=3</em>) – Size (in inches) of each grid cell along one dimension.
+The total figure size will be approximately <cite>(size * n_cols, size * n_rows)</cite>.</p></li>
+<li><p><strong>hspace_inches</strong> (<em>float</em><em>, </em><em>default=0.4</em>) – Vertical gap between subplot rows (in inches).</p></li>
+<li><p><strong>wspace_inches</strong> (<em>float</em><em>, </em><em>default=0.4</em>) – Horizontal gap between subplot columns (in inches).</p></li>
+<li><p><strong>ylims</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of (min, max) pairs specifying y-axis limits for each subplot.
+Length must match the total number of subplots if provided.</p></li>
+<li><p><strong>xlims</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of (min, max) pairs specifying x-axis limits for each subplot.
+Length must match the total number of subplots if provided.</p></li>
+<li><p><strong>ylabels</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of y-axis labels for each subplot.</p></li>
+<li><p><strong>xlabels</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of x-axis labels for each subplot.</p></li>
+<li><p><strong>titles</strong> (<em>list</em><em>[</em><em>str</em><em>] or </em><em>None</em><em>, </em><em>optional</em>) – A list of titles for each subplot.</p></li>
+<li><p><strong>grid</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to display gridlines in each subplot.</p></li>
+<li><p><strong>remove_ticks</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Whether to remove x and y ticks from all subplots.</p></li>
+<li><p><strong>abc</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to label each subplot with a small reference tag (e.g., “(a)”, “(b)”, “(c)”)
+for research paper–style referencing.</p></li>
+<li><p><strong>fig_num</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>float</em><em>, </em><em>default=&quot;&quot;</em>) – Optional prefix to the alphabetical subplot labels, e.g. “1a”, “2b”, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – The created Matplotlib Figure object.</p></li>
+<li><p><strong>axs</strong> (<em>numpy.ndarray of matplotlib.axes.Axes</em>) – A 2D array of Axes objects with shape <cite>(n_rows, n_cols)</cite> representing the subplot grid.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="painter">
+<h2>Painter<a class="headerlink" href="#painter" title="Link to this heading">¶</a></h2>
+<p>This class is not intended to be used directly. The <cite>canvas</cite> class object has a <cite>paint</cite> property that returns an instance of this calls which various APIs to paint the canvas. Below is how it is supposed to be used.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.paint.signal">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paint.</span></span><span class="sig-name descname"><span class="pre">signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.paint.signal" title="Link to this definition">¶</a></dt>
+<dd><p>Plot a 1D signal on the given Matplotlib axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis on which to draw the signal.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – The signal values to be plotted on the y-axis.</p></li>
+<li><p><strong>x</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The corresponding x-axis values. If not provided, the function
+uses the indices of <cite>y</cite> (i.e., <cite>np.arange(len(y))</cite>).</p></li>
+<li><p><strong>c</strong> (<em>str</em><em>, </em><em>optional</em>) – Line color (e.g., ‘r’, ‘blue’, ‘#1f77b4’). Defaults to Matplotlib’s
+automatic color cycle.</p></li>
+<li><p><strong>ls</strong> (<em>str</em><em>, </em><em>optional</em>) – Line style (e.g., ‘-’, ‘–’, ‘-.’, ‘:’). Defaults to a solid line.</p></li>
+<li><p><strong>lw</strong> (<em>float</em><em>, </em><em>optional</em>) – Line width in points. Defaults to Matplotlib’s default line width.</p></li>
+<li><p><strong>m</strong> (<em>str</em><em>, </em><em>optional</em>) – Marker style (e.g., ‘o’, ‘x’, ‘^’, ‘.’). No marker is drawn if None.</p></li>
+<li><p><strong>ms</strong> (<em>float</em><em>, </em><em>default=3</em>) – Marker size in points.</p></li>
+<li><p><strong>legend</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the signal. If provided, the function adds a legend entry.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function modifies the provided axis in-place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function is a convenience wrapper for <cite>ax.plot()</cite>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.paint.image">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paint.</span></span><span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray_r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upper'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.paint.image" title="Link to this definition">¶</a></dt>
+<dd><p>Display a 2D or 3D image (e.g., grayscale or RGB) on the given Matplotlib axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis on which to render the image.</p></li>
+<li><p><strong>M</strong> (<em>np.ndarray</em>) – <dl class="simple">
+<dt>The image or matrix to display. Can be:</dt><dd><ul>
+<li><p>2D array for grayscale or matrix data.</p></li>
+<li><p>3D array (H, W, 3) for RGB images.</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Values corresponding to the y-axis. If None, the image indices are used.</p></li>
+<li><p><strong>x</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Values corresponding to the x-axis. If None, the image indices are used.</p></li>
+<li><p><strong>c</strong> (<em>str</em><em>, </em><em>default='gray_r'</em>) – Colormap name used when <cite>M</cite> is a 2D array (e.g., ‘viridis’, ‘gray’).
+Ignored if <cite>M</cite> is RGB.</p></li>
+<li><p><strong>o</strong> (<em>{'upper'</em><em>, </em><em>'lower'}</em><em>, </em><em>default='upper'</em>) – Origin of the image. ‘upper’ places [0, 0] at the top-left corner,
+while ‘lower’ places it at the bottom-left.</p></li>
+<li><p><strong>clabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the colorbar. Displayed only if a colorbar is added.</p></li>
+<li><p><strong>cax</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – The axis on which to draw the colorbar. If None, no colorbar is drawn.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=1</em>) – Opacity of the image. Must be between 0 (transparent) and 1 (opaque).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function modifies the provided axis in-place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This is a convenience wrapper for <cite>ax.imshow()</cite>.</p></li>
+<li><p>If <cite>M</cite> is a 2D matrix and <cite>cax</cite> is provided, a colorbar is automatically added.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.paint.annotation">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paint.</span></span><span class="sig-name descname"><span class="pre">annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.paint.annotation" title="Link to this definition">¶</a></dt>
+<dd><p>Draw annotation spans on the given Matplotlib axis.</p>
+<p>Typically used to visualize labeled regions or time spans (e.g., phoneme or word
+boundaries) produced by <cite>modusa.load.annotation()</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis on which to draw the annotations.</p></li>
+<li><p><strong>ann</strong> (<em>list</em><em> of </em><em>tuple</em>) – <p>List of annotation spans. Each tuple should have the form:
+<cite>(start, end, label, confidence, group)</cite> where:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>start</cite> (float): Start position (e.g., in seconds or samples).</p></li>
+<li><p><cite>end</cite> (float): End position.</p></li>
+<li><p><cite>label</cite> (str): Annotation label.</p></li>
+<li><p><cite>confidence</cite> (float or None): Incase CTM gives confidence values.</p></li>
+<li><p><cite>group</cite> (int or None): Incase you grouped together different labels.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>text_loc</strong> (<em>{'b'</em><em>, </em><em>'m'</em><em>, </em><em>'t'}</em><em>, </em><em>default='m'</em>) – <dl class="simple">
+<dt>Vertical position of the text label within each annotation box:</dt><dd><ul>
+<li><p><cite>’b’</cite> → bottom</p></li>
+<li><p><cite>’m’</cite> → middle</p></li>
+<li><p><cite>’t’</cite> → top</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>default=0.7</em>) – Transparency level of the annotation boxes.
+Must be between 0 (fully transparent) and 1 (fully opaque).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function modifies the provided axis in-place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Each annotation span is rendered as a colored rectangle with an optional text label.</p></li>
+<li><p>The color of each rectangle is determined internally based on the group.</p></li>
+<li><dl class="simple">
+<dt>Useful for visualizing segment boundaries in time-aligned data such as audio,</dt><dd><p>or event sequences.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.paint.vlines">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paint.</span></span><span class="sig-name descname"><span class="pre">vlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.paint.vlines" title="Link to this definition">¶</a></dt>
+<dd><p>Draw vertical lines (event markers) on the given Matplotlib axis.</p>
+<p>Typically used to visualize discrete events such as onsets, beats,
+or boundaries within a time series or spectrogram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis on which to draw the vertical lines.</p></li>
+<li><p><strong>xs</strong> (<em>array_like</em>) – Sequence of x-values where vertical lines will be drawn.</p></li>
+<li><p><strong>y0</strong> (<em>float</em><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – The starting y-coordinate(s) for the lines. Defaults to the bottom
+of the current y-axis limit if None.</p></li>
+<li><p><strong>y1</strong> (<em>float</em><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – The ending y-coordinate(s) for the lines. Defaults to the top
+of the current y-axis limit if None.</p></li>
+<li><p><strong>c</strong> (<em>str</em><em>, </em><em>optional</em>) – Color of the vertical lines (e.g., ‘k’, ‘red’, ‘#1f77b4’).
+Defaults to Matplotlib’s automatic color cycle.</p></li>
+<li><p><strong>ls</strong> (<em>str</em><em>, </em><em>default='-'</em>) – Line style (e.g., ‘-’, ‘–’, ‘-.’, ‘:’).</p></li>
+<li><p><strong>lw</strong> (<em>float</em><em>, </em><em>optional</em>) – Line width in points. Defaults to Matplotlib’s default line width.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the line(s). Used for legends if provided.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function modifies the provided axis in-place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This is a convenience wrapper for <cite>ax.vlines()</cite>.</p></li>
+<li><p>If multiple <cite>xs</cite> values are provided, a line is drawn for each.</p></li>
+<li><p>Commonly used to mark temporal events like onsets in visualizations.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modusa.paint.arrow">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paint.</span></span><span class="sig-name descname"><span class="pre">arrow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'black'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrow_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modusa.paint.arrow" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a labeled arrow from a start point to an end point with automatic label positioning.</p>
+<p>Useful for illustrating vectors, directions, or relationships between two points
+in a 2D coordinate space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The Matplotlib axis on which to draw the arrow.</p></li>
+<li><p><strong>start</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – Coordinates of the arrow’s starting point <cite>(x_start, y_start)</cite>.</p></li>
+<li><p><strong>end</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – Coordinates of the arrow’s ending point <cite>(x_end, y_end)</cite>.</p></li>
+<li><p><strong>c</strong> (<em>str</em><em>, </em><em>default='black'</em>) – Color of the arrow and its labels.</p></li>
+<li><p><strong>head_size</strong> (<em>float</em><em>, </em><em>default=0.05</em>) – Relative size of the arrowhead. Larger values make the arrowhead more prominent.</p></li>
+<li><p><strong>head_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Optional text label displayed near the arrowhead.</p></li>
+<li><p><strong>tail_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Optional text label displayed near the tail (starting point).</p></li>
+<li><p><strong>arrow_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Optional text label displayed near the midpoint of the arrow.</p></li>
+<li><p><strong>offset</strong> (<em>float</em><em>, </em><em>default=0.05</em>) – Offset distance (in data units) used to slightly displace text labels
+perpendicular to the arrow direction to prevent overlap.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function modifies the provided axis in-place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The arrow is drawn using <cite>ax.annotate()</cite> or <cite>ax.arrow()</cite> for flexibility and control.</p></li>
+<li><p>Label placement is automatically adjusted to improve readability.</p></li>
+<li><p>Can be combined with <cite>ax.text()</cite> or other annotations for more complex diagrams.</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="animator">
+<h2>Animator<a class="headerlink" href="#animator" title="Link to this heading">¶</a></h2>
+<p><cite>Animator</cite> is a context-managed animation builder designed to capture a sequence of frames
+from <cite>Canvas</cite> objects and save them as a GIF. It can automatically display the resulting GIF
+in Jupyter notebooks and in exported HTML.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">modusa</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ms</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">ms</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="s2">&quot;./wave.gif&quot;</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">anim</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">cnv</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">stacks</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">focus</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frame</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cnv</span><span class="o">.</span><span class="n">paint</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:])</span>
+        <span class="n">anim</span><span class="o">.</span><span class="n">snapshot</span><span class="p">(</span><span class="n">cnv</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="distribution-plot">
+<h2>Distribution Plot<a class="headerlink" href="#distribution-plot" title="Link to this heading">¶</a></h2>
+<p>The <cite>modusa.hill_plot</cite> function generates a distribution plot, typically used to visualize the statistical spread or density of a dataset. This is useful for understanding patterns, skewness, and overall behavior of your data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="modusa.hill_plot">
+<span class="sig-prename descclassname"><span class="pre">modusa.</span></span><span class="sig-name descname"><span class="pre">hill_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">widths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter_amount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upper'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modusa/_visualizer/_painter/_quick_plotter.html#hill_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modusa.hill_plot" title="Link to this definition">¶</a></dt>
+<dd><p>A plot to see distribution of different groups
+along with statistical markers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> (<em>array-like</em>) – Data arrays for each group.</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Labels for each group (y-axis).</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for x-axis.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for y-axis.</p></li>
+<li><p><strong>xlim</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>) – xlim (Default: None)</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Plot title.</p></li>
+<li><p><strong>widths</strong> (<em>float</em><em>, </em><em>optional</em>) – Width of violins.</p></li>
+<li><p><strong>bw_method</strong> (<em>float</em><em>, </em><em>optional</em>) – Bandwidth method for KDE.</p></li>
+<li><p><strong>jitter_amount</strong> (<em>float</em><em>, </em><em>optional</em>) – Amount of vertical jitter for strip points.</p></li>
+<li><p><strong>side</strong> (<em>str</em><em>, </em><em>'upper'</em><em> or </em><em>'lower'</em>) – Which half of the violin to draw (upper or lower relative to y-axis).</p></li>
+<li><p><strong>show_stats</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show mean and median markers.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib axes</em><em>, </em><em>optional</em>) – Axes to plot on.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="synthesizer.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Synthesizer</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="loader.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Loader</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Ankit Anand
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Visualizer</a><ul>
+<li><a class="reference internal" href="#figure-layouts">Figure Layouts</a><ul>
+<li><a class="reference internal" href="#modusa.figlayouts.tracks"><code class="docutils literal notranslate"><span class="pre">figlayouts.tracks()</span></code></a></li>
+<li><a class="reference internal" href="#modusa.figlayouts.collage"><code class="docutils literal notranslate"><span class="pre">figlayouts.collage()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#painter">Painter</a><ul>
+<li><a class="reference internal" href="#modusa.paint.signal"><code class="docutils literal notranslate"><span class="pre">paint.signal()</span></code></a></li>
+<li><a class="reference internal" href="#modusa.paint.image"><code class="docutils literal notranslate"><span class="pre">paint.image()</span></code></a></li>
+<li><a class="reference internal" href="#modusa.paint.annotation"><code class="docutils literal notranslate"><span class="pre">paint.annotation()</span></code></a></li>
+<li><a class="reference internal" href="#modusa.paint.vlines"><code class="docutils literal notranslate"><span class="pre">paint.vlines()</span></code></a></li>
+<li><a class="reference internal" href="#modusa.paint.arrow"><code class="docutils literal notranslate"><span class="pre">paint.arrow()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#animator">Animator</a></li>
+<li><a class="reference internal" href="#distribution-plot">Distribution Plot</a><ul>
+<li><a class="reference internal" href="#modusa.hill_plot"><code class="docutils literal notranslate"><span class="pre">hill_plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=8bd4c90a"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
