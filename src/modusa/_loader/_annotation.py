@@ -38,7 +38,7 @@ class Annotation:
             return Annotation(self._raw[key])
         else:
             # Return a single element (tuple)
-            return Annotation([self._raw[key]])
+            return self._raw[key]
         
     def __iter__(self):
         """Allows iteration over the annotation entries."""
