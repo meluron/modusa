@@ -14,30 +14,37 @@ import re
 
 class Annotation:
     """
-    Datastructure to hold annotation.
-    The format is [(start, end, label, confidence, group), (), ...]
+    A modusa model class to hold annotations.
+    The format that is followed is:
+    [(start_time, end_time, label, confidence, group), ...)]
     """
     
     def __init__(self, raw=None):
-        self._raw = raw # Holds the raw data list[tuple[float, float, str, confidence, group]]
+        # This holds the annotation data in raw format as list[tuple[float, float, str, confidence, group]]
+        self._raw = raw
     
     def __repr__(self):
         lines = [f"{item}," for item in self._raw]
         return "Annotation(" + "[" + "\n".join(lines) + "])"
     
     def __len__(self):
+        """Returns total number of annotation entries."""
         return len(self._raw)
     
     def __getitem__(self, key):
+        """Get item(s) from the annotation."""
         if isinstance(key, slice):
             # Return a new Annotation object with the sliced data
             return Annotation(self._raw[key])
         else:
             # Return a single element (tuple)
             return Annotation([self._raw[key]])
+        
     def __iter__(self):
+        """Allows iteration over the annotation entries."""
         return iter(self._raw)
     
+    # ==== Static methods to load annotation
     @staticmethod
     def _get_file_format(fp):
         """Return the format (str) of the file."""
@@ -160,7 +167,7 @@ class Annotation:
         
     
     @staticmethod
-    def _load(fp):
+    def _load_from_file(fp):
         """
         Load the annotation from a given filepath.
         """
@@ -188,8 +195,18 @@ class Annotation:
         ann: Annotation = Annotation(raw_annotation)
             
         return ann
+
+    @staticmethod
+    def _load_from_raw(raw: list[tuple[str, float, float, str, float]]):
+        """
+        Load the annotation from a given raw data structure.
+        """
+        
+        ann: Annotation = Annotation(raw=raw)
+        
+        return ann
     
-    # ==== Utility methods
+    # ==== Utility methods for annotation object
     def trim(self, from_, to_):
         """
         Return a new annotation object trimmed to a segment.

@@ -73,29 +73,30 @@ class Loader:
         return img
     
     @staticmethod
-    def annotation(fp):
+    def annotation(fp = None, raw: list[tuple[str, float, float, str, float]] = None):
         """
         Load annotation from audatity label
         text file, ctm label file, textgrid label file.
     
         Parameters
         ----------
-        path: str | PathLike
+        path: str | PathLike | None
             label text/ctm/textgrid file path.
-        trim: tuple[number, number] | number | None
-            Incase you trimmed the audio signal, this parameter will help clip the annotation making sure that the timings are aligned to the trimmed audio.
-            If you trimmed the audio, say from (10, 20), set the trim to (10, 20).
-            Default: None
+        raw: list[tuple[str, float, float, str, float]] | None
+            Pre-loaded raw annotation data structure
+            [(start, end, label, confidence, group), (), ...]
     
         Returns
         -------
-        list[tuple, ...]
-            - annotation data structure
-            - [(start, end, label), ...]
+        Annotation
+            Loaded Annotation object.
         """
         from ._annotation import Annotation
         
         if fp is not None:
-            ann = Annotation._load(fp)
+            ann = Annotation._load_from_file(fp=fp)
+        
+        if raw is not None:
+            ann = Annotation._load_from_raw(raw=raw)
         
         return ann
