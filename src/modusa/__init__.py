@@ -48,5 +48,5 @@ from ._visualizer._painter._quick_plotter import hill_plot
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
-__version__ = "1.2.0a1" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
+__version__ = "1.2.1a1" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
 #====================
