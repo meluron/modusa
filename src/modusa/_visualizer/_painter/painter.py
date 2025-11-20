@@ -423,38 +423,20 @@ class Painter:
             ax.text(xm + ox, ym + oy, arrow_label, color=c, fontsize=10, ha="center")
     
     @staticmethod
-    def line(ax, start, end, c="black", ls="-", lw=1.5, label=None):
-        """
-        Draw a line on the given Matplotlib Axes.
+    def line(ax, start, end, c="black", ls="-", lw=1.5, label=None, z=5):
+      x_values = [start[0], end[0]]
+      y_values = [start[1], end[1]]
+      
+      ax.plot(
+          x_values,
+          y_values,
+          color=c,
+          linestyle=ls,
+          linewidth=lw,
+          label=label,
+          zorder=z,
+      )
 
-        Parameters
-        ----------
-        ax : matplotlib.axes.Axes
-            The axis to draw on.
-        start : tuple (x1, y1)
-            Starting coordinate of the line.
-        end : tuple (x2, y2)
-            Ending coordinate of the line.
-        c : str, optional
-            Line color. Default is black.
-        ls : str, optional
-            Line style (e.g., '-', '--', ':').
-        lw : float, optional
-            Line width.
-        label : str, optional
-            Label for legend.
-        """
-        x_values = [start[0], end[0]]
-        y_values = [start[1], end[1]]
-        
-        ax.plot(
-            x_values,
-            y_values,
-            color=c,
-            linestyle=ls,
-            linewidth=lw,
-            label=label
-        )
 
 
     @staticmethod
