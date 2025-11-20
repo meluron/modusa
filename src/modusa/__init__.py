@@ -1,5 +1,12 @@
-# Loader
-from ._loader.loader import Loader as load
+#============================================
+# Modusa Models
+#============================================
+#-------- Annotation Model ---------
+from ._models.annotation.annotation import Annotation as annotation
+#-------- Audio Model ---------
+from ._models.audio.audio import Audio as audio
+#-------- Image Model ---------
+from ._models.image.image import Image as image
 
 # Synthesizer
 from ._synthesizer.synthesizer import Synthesizer as synthesize
