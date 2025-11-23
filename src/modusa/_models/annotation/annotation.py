@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 #---------------------------------
 # Author: Ankit Anand
-# Date: 11/11/25
+# Date: 23-11-2025
 # Email: ankit0.anand0@gmail.com
 #---------------------------------
 
@@ -20,20 +18,70 @@ class Annotation:
   [[start_time, end_time, label, confidence, group], ...]
   """
     
-  def __init__(self, annfp: str | Path | None = None, raw: list[tuple[float, float, str, float | None, int | None]] | None = None):
-    # Intantiate the annotaton object
-    # == If annfp is passed, load from the file
+  def __init__(self, annfp: str|Path|None = None, data: list[tuple[float, float, str, float|None, int|None]]|None = None):
+
+    #============================================
+    # I should list all the internal states of
+    # this class for easier recollection.
+    #============================================
+    self._data: list|None = None
+
+    #============================================
+    # I should load the annotation object from a 
+    # given file. I have added support for 
+    # loading 'textgrid', 'audacity label' and 
+    # 'ctm' files. 
+    #============================================
     if annfp is not None:
-      if not isinstance(annfp, str | Path):
-        raise ValueError(f"'fp' must be either str or Path, not {type(annfp)}")
-      self._load_from_file(annfp=annfp)
-    # == If raw data [[[start, end, label, confidence, group]]] is passed, load from the raw data
-    elif raw is not None:
-      self._load_from_raw(raw=raw)
-    # == Raise error if neither is passed
+      annfp = Path(annfp)
+      data: list = Annotation._load_from_file(annfp=annfp)
+      
+      #-------- Update the internal states ---------
+      self._data = data
+    
+    #============================================
+    # If data [[start, end, label, confidence, group]] 
+    # is passed, then I should load the annotation
+    # object from the data.
+    #============================================
+    elif data is not None:
+      self._data = data
+
     else:
       raise ValueError("Either 'fp' or 'raw' must be provided to load the annotation.")
 
+  #============================================
+  # Properties
+  #============================================
+  @property
+  def data(self):
+    return self._data
+
+  @property
+  def size(self):
+    """Returns the total number of annotation entries"""
+    return len(self)
+
+  #============================================
+  # Dunder methods
+  #============================================  
+  def __len__(self):
+    """Returns total number of annotation entries."""
+    return len(self.data)
+    
+  def __getitem__(self, key: slice | int):
+    """Get item(s) from the annotation."""
+    if isinstance(key, slice):
+      # Return a new Annotation object with the sliced data
+      return Annotation(raw=self.data[key])
+    else:
+      # Return a single element (tuple) so that we can further unpack it
+      return self.data[key]
+        
+  def __iter__(self):
+    """Allows iteration over the annotation entries."""
+    return iter(self.data)
+  
   def __repr__(self):
     # To have a string representation of the annotation object Annotation([[start, end, label, confidence, group], [...], ...]])
     entries_str = [] # List of entries with each entry being another list [start end label confidence group]
@@ -47,176 +95,131 @@ class Annotation:
     # Combine all entries into the final string representation with indentation for each entry
     indent = "  "  # Indentation for each line
     return f"Annotation([\n{indent}" + f"\n{indent}".join(entries_str) + "\n])"
-    
-  def __len__(self):
-    """Returns total number of annotation entries."""
-    return len(self._raw)
 
-  @property
-  def size(self):
-    """Returns the total number of annotation entries"""
-    return len(self)
-    
-  def __getitem__(self, key: slice | int):
-    """Get item(s) from the annotation."""
-    if isinstance(key, slice):
-      # Return a new Annotation object with the sliced data
-      return Annotation(raw=self._raw[key])
-    else:
-      # Return a single element (tuple) so that we can further unpack it
-      return self._raw[key]
-        
-  def __iter__(self):
-    """Allows iteration over the annotation entries."""
-    return iter(self._raw)
-    
+  #============================================
+  # The function help load the annotation data
+  # from a given file.
+  #============================================
   @staticmethod
-  def _get_the_parser(fp):
-    """
-    Return a function that can be used to parse the
-    annotation file in supported fornats.
-    """
-    SUPPORTED_FORMATS: list = [".txt", ".ctm", ".textgrid"]
-
-    # Convert into path object
-    fp: Path = Path(fp) 
-    # Extract the extension
-    format: str = fp.suffix
-
-    if format not in SUPPORTED_FORMATS:
-      raise ValueError(f"The annotation format is not supported - {fp}")
-    else:
-      fmt2parser: dict = {".txt": Annotation._audacity_parser, ".ctm": Annotation._ctm_parser, ".textgrid": Annotation._textgrid_parser}
-    
-    return fmt2parser.get(format, None)
-    
-  @staticmethod
-  def _audacity_parser(fp):
-    """
-    Parse audacity .txt label and return annotation.
-    """
-    # Open the txt file and read the content
-    with open(str(fp), "r") as f:
-      lines = [line.rstrip("\n") for line in f]
-
-    # Store the lines of the text file in teh annotation format 
-    ann = []
-    for line in lines:
-      start, end, label = line.split("\t")
-      start, end = float(start), float(end)
-      ann.append((start, end, label, None, None))
-            
-    return ann
-    
-  @staticmethod
-  def _ctm_parser(fp):
-    """
-    Parse .ctm label and return annotation.
-    """
-    with open(str(fp), "r") as f:
-      content = f.read().splitlines()
-    
-    ann = []
-    for c in content:
-      if not c.strip():
-        continue
-        
-      parts = c.split()
-      if len(parts) == 5:
-        segment_id, channel, start, dur, label = parts
-        start, dur = float(start), float(dur)
-        confidence = None
-          
-      elif len(parts) == 6:
-        segment_id, channel, start, dur, label, confidence = parts
-        start, dur = float(start), float(dur)
-        confidence = float(confidence)
-      else:
-        warnings.warn(f"'{c}' is not a standard ctm line.")
-        continue
-        
-      ann.append((start, start + dur, label, confidence, None))
-    
-    return ann
-    
-  @staticmethod
-  def _textgrid_parser(fp, trim):
-    """
-    Parse .textgrid label and return annotation.
-    """
-    ann = []
-    with open(str(fp), "r") as f:
-      lines = [line.strip() for line in f]
-        
-    in_interval = False
-    s = e = None
-    label = ""
-    
-    for line in lines:
-      # detect start of interval
-      if line.startswith("intervals ["):
-        in_interval = True
-        s = e = None
-        label = ""
-        continue
-      
-      if in_interval:
-        if line.startswith("xmin ="):
-          s = float(line.split("=")[1].strip())
-        elif line.startswith("xmax ="):
-          e = float(line.split("=")[1].strip())
-        elif line.startswith("text ="):
-          label = line.split("=", 1)[1].strip().strip('"')
-            
-          # Finished reading an interval
-          if label != "" and s is not None and e is not None:
-            ann.append((s, e, label, None, None))
-          in_interval = False  # ready for next interval
-                
-    return ann
-        
-  def _load_from_file(self, annfp: Path):
+  def _load_from_file(annfp: Path):
     """
     Load the annotation from a given filepath.
     """
+    
+    #============================================
+    # I should raise error if the file does not
+    # exist.
+    #============================================
+    if not annfp.exists(): raise FileExistsError(f"{annfp} does not exist.")
+    
+    #============================================
+    # I should find out the file format. Incase
+    # it is different from allowed format, I should
+    # raise an error.
+    #============================================
+    SUPPORTED_FORMATS: list = [".txt", ".ctm", ".textgrid"]
+    format: str = annfp.suffix
+    if format not in SUPPORTED_FORMATS:
+      raise ValueError(f"The annotation format is not supported - {annfp}")
+    
+    #============================================
+    # I should now have different condition for
+    # loading annotation from the allowed file
+    # format.
+    #============================================
+    data: list = []
+
+    #============================================
+    # Loading an audacity file.
+    #============================================
+    if format == ".txt":
+      #-------- Open the txt file and read the content ---------
+      with open(str(annfp), "r") as f:
+        lines = [line.rstrip("\n") for line in f]
+
+      #-------- Store the lines of the text file in the annotation format  ---------
+      for line in lines:
+        start, end, label = line.split("\t")
+        start, end = float(start), float(end)
+        data.append((start, end, label, None, None))
+
+    #============================================
+    # Loading a ctm file.
+    #============================================
+    elif format == ".ctm":
+      with open(str(annfp), "r") as f:
+        content = f.read().splitlines()
       
-    # Raise error if the file does not exist
-    annfp: Path = Path(annfp)
-    if not annfp.exists():
-      raise FileExistsError(f"{annfp} does not exist.")
+      for c in content:
+        if not c.strip():
+          continue
+          
+        parts = c.split()
+        if len(parts) == 5:
+          segment_id, channel, start, dur, label = parts
+          start, dur = float(start), float(dur)
+          confidence = None
+            
+        elif len(parts) == 6:
+          segment_id, channel, start, dur, label, confidence = parts
+          start, dur = float(start), float(dur)
+          confidence = float(confidence)
+        else:
+          warnings.warn(f"'{c}' is not a standard ctm line.")
+          continue
+          
+        data.append((start, start + dur, label, confidence, None))
+
+    #============================================
+    # Loading a textgrid file.
+    #============================================
+    elif format == ".textgrid":
+      with open(str(annfp), "r") as f:
+        lines = [line.strip() for line in f]
+          
+      in_interval = False
+      s = e = None
+      label = ""
+      
+      for line in lines:
+        # detect start of interval
+        if line.startswith("intervals ["):
+          in_interval = True
+          s = e = None
+          label = ""
+          continue
+        
+        if in_interval:
+          if line.startswith("xmin ="):
+            s = float(line.split("=")[1].strip())
+          elif line.startswith("xmax ="):
+            e = float(line.split("=")[1].strip())
+          elif line.startswith("text ="):
+            label = line.split("=", 1)[1].strip().strip('"')
+              
+            # Finished reading an interval
+            if label != "" and s is not None and e is not None:
+              data.append((s, e, label, None, None))
+            in_interval = False  # ready for next interval
     
-    # Get the correct parser for the given annotation format
-    parser: Callable = Annotation._get_the_parser(annfp)
-
-    # Parse the raw annotation using the correct parser
-    raw_annotation: list[tuple[float, float, str]] = parser(annfp)
-
-    # Store the raw annotation in the annotation object
-    self._raw = raw_annotation
-  
-    return self
-
-  def _load_from_raw(self, raw: list[tuple[str, float, float, str, float], ...]):
-    """
-    Load the annotation from a given raw data structure.
-    """
-    self._raw = raw
-    return self
-    
-  # ==== Utility methods for annotation object
+  #============================================
+  # Trim feature.
+  #============================================
   def trim(self, from_, to_):
     """
     Return a new annotation object trimmed to a segment.
     """
     raw_ann = [
         (start, end, label, confidence, group)
-        for (start, end, label, confidence, group) in self._raw
+        for (start, end, label, confidence, group) in self.data
         if start >= from_ and end <= to_
     ]
 
-    return Annotation(raw=raw_ann)
+    return Annotation(data=raw_ann)
 
-
+  #============================================
+  # Search feature.
+  #============================================
   def search(self, for_: str, case_insensitive: bool = True):
     """
     Return a new annotation object with the
@@ -245,12 +248,14 @@ class Annotation:
     
     # Loop through each label
     new_raw_ann = [(start, end, label, confidence, group)
-    for (start, end, label, confidence, group) in self._raw
+    for (start, end, label, confidence, group) in self.data
     if regex_pattern.search(label)]
     
-    return Annotation(raw=new_raw_ann)
+    return Annotation(data=new_raw_ann)
         
-
+  #============================================
+  # Group feature.
+  #============================================
   def group(self, by_: str | list[str, ...],  case_insensitive: bool = True):
     """
     Return a new Annotation object containing entries whose label matches the given pattern(s).
@@ -286,7 +291,7 @@ class Annotation:
       regex_patterns.append(regex_pattern)
     
     # Loop through each label
-    for start, end, label, confidence, _ in self._raw:
+    for start, end, label, confidence, _ in self.data:
       group_num = None  # default
       # Loop through each regex pattern
       for i, pattern in enumerate(regex_patterns):
@@ -298,8 +303,11 @@ class Annotation:
       # After updating the group number, add it to the new annotation
       new_raw_ann.append((start, end, label, confidence, group_num))
 
-    return Annotation(raw=new_raw_ann)
-    
+    return Annotation(data=new_raw_ann)
+
+  #============================================
+  # Remove entry feature.
+  #============================================ 
   def remove(self, this_: str, case_insensitive: bool = True):
     """
     Returns a new annotation object after removing
@@ -333,17 +341,11 @@ class Annotation:
     ]
     
     return Annotation(raw=new_raw_ann)
-        
-        
-  def to_list(self):
-    """
-    Converts the annotation into list format.
-    """
-    return deepcopy(self._raw)
     
-  # ======
-  # Save annotation in differnt format
-  # ======    
+  #============================================
+  # Save in different formats.
+  # text, ctm, textgrid
+  #============================================
   def saveas_txt(self, outfp):
     """
     Saves annotation as a text file.
@@ -424,6 +426,6 @@ class Annotation:
 
 
 if __name__ == "__main__":
-  ann = Annotation(raw=[[0.0, 1.22110, "hello", 0.9, None], [1.5, 2.5, "world", 0.8, None]])
+  ann = Annotation(data=[[0.0, 1.22110, "hello", 0.9, None], [1.5, 2.5, "world", 0.8, None]])
   print(ann.group(by_="*o*"))
   print(ann)

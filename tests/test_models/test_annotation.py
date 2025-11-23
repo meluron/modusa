@@ -11,7 +11,7 @@ from pathlib import Path
 
 this_dir = Path(__file__).parents[1].resolve()
 
-raw = [(1, 2, "Label 1", None, None), (5, 6, "Label 2", 0.5, 1)]
+data = [(1, 2, "Label 1", None, None), (5, 6, "Label 2", 0.5, 1)]
 
 # Test loading annotation object from different sources
 def test_load_audacity_txt():
@@ -29,16 +29,16 @@ def test_load_textgrid():
 	pass
 
 def test_load_raw():
-	ann = ms.annotation(raw=raw)
+	ann = ms.annotation(data=data)
 
 def test_load_empty():
-	ann = ms.annotation(raw=[()])
+	ann = ms.annotation(data=[()])
 
 def test_get_item():
-	ann = ms.annotation(raw=raw)
-	print(ann[0], raw[0])
-	assert ann[0] == raw[0]
+	ann = ms.annotation(data=data)
+	print(ann[0], data[0])
+	assert ann[0] == data[0]
 
 def test_len():
-	ann = ms.annotation(raw=raw)
+	ann = ms.annotation(data=data)
 	assert len(ann) == ann.size == 2
