@@ -152,24 +152,36 @@ class Audio:
       File name stem acting as the title of the audio object.
     """
 
-    # == Raise an error if the audio file does not exist
-    audiofp = Path(audiofp)
+    #============================================
+    # I should raise an error if the audio file 
+    # does not exist
+    #============================================
+
     if not audiofp.exists(): raise FileExistsError(f"{audiofp} does not exist")
     
-    # == Parse the sr and nchannels info from the header and set sr, ch to the default
+    #============================================
+    # I should parse the audio file header to get
+    # the original sr, ch to load the audio into.
+    #============================================
+    
+    #-------- Parse the sr and nchannels info from the header ---------
     default_sr, default_nchannels = parse_sr_and_nchannels(audiofp) # int, int
-    # ==== Use the parsed sr and nchannels if not explicitely passed by the user
+
+    #-------- Use the parsed sr and nchannels if not explicitely passed by the user ---------
     if sr is None: sr = default_sr
     if ch is None: ch = default_nchannels
 
-    # ==== Check if the ch is valid
+    #--------  I should check if the ch is valid (1, 2) ---------
     if ch not in [1, 2]:
       raise RuntimeError(f"'ch' must be either 1 or 2, got {ch} instead")
     
-    # == Get the FFMPEG executable and run it with the correct configuration to get the audio array
+    #============================================
+    # I should load the audio array using FFMPEG 
+    # executatable
+    #============================================
+  
     ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
     
-    # ==== Setting up the configuration for FFMPEG
     cmd = [ffmpeg_exe]
     cmd += ["-i", str(audiofp), "-f", "s16le", "-acodec", "pcm_s16le"]
     cmd += ["-ar", str(sr)]
@@ -180,10 +192,9 @@ class Audio:
     raw = proc.stdout.read()
     proc.wait()
     
-    # ==== Get the data as an array
     audio = np.frombuffer(raw, np.int16).astype(np.float32) / 32768.0
     
-    # == Stereo reshaping if forced
+    #-------- Adjust the shape of the audio array to match the requirements of the Audio object ---------
     if ch == 1:
       audio = np.array([audio]) #  This is done to follow (#channels, #samples)
     if ch == 2:
