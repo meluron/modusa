@@ -202,6 +202,8 @@ class Annotation:
               data.append((s, e, label, None, None))
             in_interval = False  # ready for next interval
     
+    return data    
+    
   #============================================
   # Trim feature.
   #============================================
