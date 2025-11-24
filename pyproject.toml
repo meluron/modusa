@@ -29,4 +29,5 @@ path = "src/modusa/__init__.py"
 [dependency-groups]
 dev = [
     "pytest>=9.0.1",
+    "twine>=6.2.0",
 ]
