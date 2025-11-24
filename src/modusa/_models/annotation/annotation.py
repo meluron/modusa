@@ -83,6 +83,8 @@ class Annotation:
     return iter(self.data)
   
   def __repr__(self):
+    if self.size == 0:
+      return "Annotation([])"
     # To have a string representation of the annotation object Annotation([[start, end, label, confidence, group], [...], ...]])
     entries_str = [] # List of entries with each entry being another list [start end label confidence group]
     
@@ -308,6 +310,33 @@ class Annotation:
     return Annotation(data=new_raw_ann)
 
   #============================================
+  # Add entry feature
+  #============================================
+  def append(self, start: float, end: float, label: str, confidence: str|None = None, group: int|None = None):
+    """
+    Appends a new entry to the annotation data.
+
+    Parameters
+    ----------
+    start: float
+      Start time in sec.
+    end: float
+      End time in sec.
+    label: str
+      Label to attach with the entry to be added.
+    confidence: float|None, default=None
+      Confidence score of the label.
+    group: int|None, default=None
+      An group you would like to put the entry in.
+      Useful during visualization.
+
+    Returns
+    -------
+    None
+    """
+    self.data.append([start, end, str(label), confidence, group])
+
+  #============================================
   # Remove entry feature.
   #============================================ 
   def remove(self, this_: str, case_insensitive: bool = True):
@@ -429,5 +458,7 @@ class Annotation:
 
 if __name__ == "__main__":
   ann = Annotation(data=[[0.0, 1.22110, "hello", 0.9, None], [1.5, 2.5, "world", 0.8, None]])
+  ann.append(3, 5, "Test")
   print(ann.group(by_="*o*"))
   print(ann)
+  print(Annotation(data=[]))
