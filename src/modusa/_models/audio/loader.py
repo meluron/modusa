@@ -70,6 +70,7 @@ def load_audio(fp: str|Path, sr: int|None = None, ch: int|None = None) -> Audio:
     # I should raise an error if the audio file 
     # does not exist
     #============================================
+    fp: Path = Path(fp)
     if not fp.exists(): raise FileExistsError(f"{fp} does not exist")
     
     #============================================
