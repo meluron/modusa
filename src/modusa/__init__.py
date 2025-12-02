@@ -3,13 +3,17 @@
 #============================================
 #-------- Annotation Model ---------
 from ._models.annotation.annotation import Annotation as annotation
-from ._models.annotation.loader import load_audacity_labeltext, load_ctm, load_textgrid
 
 #-------- Audio Model ---------
 from ._models.audio.audio import Audio as audio
-from ._models.audio.loader import load_audio
+
 #-------- Image Model ---------
 from ._models.image.image import Image as image
+
+#============================================
+# Modusa Models Loader
+#============================================
+from ._medialoader.medialoader import MediaLoader as load
 
 # Synthesizer
 from ._synthesizer.synthesizer import Synthesizer as synthesize
@@ -51,5 +55,5 @@ from ._visualizer._painter._quick_plotter import hill_plot
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
-__version__ = "3.0.1" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
+__version__ = "4.0.1" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
 #====================
