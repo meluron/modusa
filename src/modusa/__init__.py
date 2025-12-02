@@ -3,8 +3,11 @@
 #============================================
 #-------- Annotation Model ---------
 from ._models.annotation.annotation import Annotation as annotation
+from ._models.annotation.loader import load_audacity_labeltext, load_ctm, load_textgrid
+
 #-------- Audio Model ---------
 from ._models.audio.audio import Audio as audio
+from ._models.audio.loader import load_audio
 #-------- Image Model ---------
 from ._models.image.image import Image as image
 

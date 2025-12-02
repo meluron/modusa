@@ -18,37 +18,8 @@ class Annotation:
   [[start_time, end_time, label, confidence, group], ...]
   """
     
-  def __init__(self, annfp: str|Path|None = None, data: list[tuple[float, float, str, float|None, int|None]]|None = None):
-
-    #============================================
-    # I should list all the internal states of
-    # this class for easier recollection.
-    #============================================
-    self._data: list|None = None
-
-    #============================================
-    # I should load the annotation object from a 
-    # given file. I have added support for 
-    # loading 'textgrid', 'audacity label' and 
-    # 'ctm' files. 
-    #============================================
-    if annfp is not None:
-      annfp = Path(annfp)
-      data: list = Annotation._load_from_file(annfp=annfp)
-      
-      #-------- Update the internal states ---------
-      self._data = data
-    
-    #============================================
-    # If data [[start, end, label, confidence, group]] 
-    # is passed, then I should load the annotation
-    # object from the data.
-    #============================================
-    elif data is not None:
-      self._data = data
-
-    else:
-      raise ValueError("Either 'fp' or 'raw' must be provided to load the annotation.")
+  def __init__(self, data: list[tuple[float, float, str, float|None, int|None]]|None = None):
+    self._data = data
 
   #============================================
   # Properties
@@ -73,7 +44,7 @@ class Annotation:
     """Get item(s) from the annotation."""
     if isinstance(key, slice):
       # Return a new Annotation object with the sliced data
-      return Annotation(raw=self.data[key])
+      return Annotation(self.data[key])
     else:
       # Return a single element (tuple) so that we can further unpack it
       return self.data[key]
@@ -97,114 +68,6 @@ class Annotation:
     # Combine all entries into the final string representation with indentation for each entry
     indent = "  "  # Indentation for each line
     return f"Annotation([\n{indent}" + f"\n{indent}".join(entries_str) + "\n])"
-
-  #============================================
-  # The function help load the annotation data
-  # from a given file.
-  #============================================
-  @staticmethod
-  def _load_from_file(annfp: Path):
-    """
-    Load the annotation from a given filepath.
-    """
-    
-    #============================================
-    # I should raise error if the file does not
-    # exist.
-    #============================================
-    if not annfp.exists(): raise FileExistsError(f"{annfp} does not exist.")
-    
-    #============================================
-    # I should find out the file format. Incase
-    # it is different from allowed format, I should
-    # raise an error.
-    #============================================
-    SUPPORTED_FORMATS: list = [".txt", ".ctm", ".textgrid"]
-    format: str = annfp.suffix
-    if format not in SUPPORTED_FORMATS:
-      raise ValueError(f"The annotation format is not supported - {annfp}")
-    
-    #============================================
-    # I should now have different condition for
-    # loading annotation from the allowed file
-    # format.
-    #============================================
-    data: list = []
-
-    #============================================
-    # Loading an audacity file.
-    #============================================
-    if format == ".txt":
-      #-------- Open the txt file and read the content ---------
-      with open(str(annfp), "r") as f:
-        lines = [line.rstrip("\n") for line in f]
-
-      #-------- Store the lines of the text file in the annotation format  ---------
-      for line in lines:
-        start, end, label = line.split("\t")
-        start, end = float(start), float(end)
-        data.append((start, end, label, None, None))
-
-    #============================================
-    # Loading a ctm file.
-    #============================================
-    elif format == ".ctm":
-      with open(str(annfp), "r") as f:
-        content = f.read().splitlines()
-      
-      for c in content:
-        if not c.strip():
-          continue
-          
-        parts = c.split()
-        if len(parts) == 5:
-          segment_id, channel, start, dur, label = parts
-          start, dur = float(start), float(dur)
-          confidence = None
-            
-        elif len(parts) == 6:
-          segment_id, channel, start, dur, label, confidence = parts
-          start, dur = float(start), float(dur)
-          confidence = float(confidence)
-        else:
-          warnings.warn(f"'{c}' is not a standard ctm line.")
-          continue
-          
-        data.append((start, start + dur, label, confidence, None))
-
-    #============================================
-    # Loading a textgrid file.
-    #============================================
-    elif format == ".textgrid":
-      with open(str(annfp), "r") as f:
-        lines = [line.strip() for line in f]
-          
-      in_interval = False
-      s = e = None
-      label = ""
-      
-      for line in lines:
-        # detect start of interval
-        if line.startswith("intervals ["):
-          in_interval = True
-          s = e = None
-          label = ""
-          continue
-        
-        if in_interval:
-          if line.startswith("xmin ="):
-            s = float(line.split("=")[1].strip())
-          elif line.startswith("xmax ="):
-            e = float(line.split("=")[1].strip())
-          elif line.startswith("text ="):
-            label = line.split("=", 1)[1].strip().strip('"')
-              
-            # Finished reading an interval
-            if label != "" and s is not None and e is not None:
-              data.append((s, e, label, None, None))
-            in_interval = False  # ready for next interval
-    
-    return data    
     
   #============================================
   # Trim feature.
@@ -219,7 +82,7 @@ class Annotation:
         if start >= from_ and end <= to_
     ]
 
-    return Annotation(data=raw_ann)
+    return Annotation(raw_ann)
 
   #============================================
   # Search feature.
@@ -255,7 +118,7 @@ class Annotation:
     for (start, end, label, confidence, group) in self.data
     if regex_pattern.search(label)]
     
-    return Annotation(data=new_raw_ann)
+    return Annotation(new_raw_ann)
         
   #============================================
   # Group feature.
@@ -307,7 +170,7 @@ class Annotation:
       # After updating the group number, add it to the new annotation
       new_raw_ann.append((start, end, label, confidence, group_num))
 
-    return Annotation(data=new_raw_ann)
+    return Annotation(new_raw_ann)
 
   #============================================
   # Add entry feature
@@ -371,7 +234,7 @@ class Annotation:
       if not pattern.search(lbl)
     ]
     
-    return Annotation(raw=new_raw_ann)
+    return Annotation(new_raw_ann)
     
   #============================================
   # Save in different formats.

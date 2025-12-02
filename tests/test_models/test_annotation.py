@@ -4,7 +4,6 @@
 # Email: ankit0.anand0@gmail.com
 #---------------------------------
 
-
 import pytest
 import modusa as ms
 from pathlib import Path
@@ -15,15 +14,15 @@ data = [(1, 2, "Label 1", None, None), (5, 6, "Label 2", 0.5, 1)]
 
 # Test loading annotation object from different sources
 def test_load_audacity_txt():
-	ann = ms.annotation(this_dir / "testdata/annotations/sample3.txt")
+	ann = ms.load_audacity_labeltext(this_dir / "testdata/annotations/sample3.txt")
 
 def test_load_ctm_with_5_cols():
 	# This has 5 columns (no confidence column)
-	ann = ms.annotation(this_dir / "testdata/annotations/sample1.ctm")
+	ann = ms.load_ctm(this_dir / "testdata/annotations/sample1.ctm")
 
 def test_load_ctm_with_6_cols():
 	# This has 6 columns (with confidence column)
-	ann = ms.annotation(this_dir / "testdata/annotations/sample2.ctm")
+	ann = ms.load_ctm(this_dir / "testdata/annotations/sample2.ctm")
 
 def test_load_textgrid():
 	pass

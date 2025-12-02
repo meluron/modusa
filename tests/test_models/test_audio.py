@@ -14,48 +14,48 @@ from pathlib import Path
 
 this_dir = Path(__file__).parents[1].resolve()
 def test_load_aac():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.aac")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.aac")
 	assert audio.title == "sample"
 	assert audio.size != 0
 	assert audio.ch == 2
 	assert audio.sr == 44100
 
 def test_load_aiff():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.aiff")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.aiff")
 	assert audio.title == "sample"
 	assert audio.size != 0
 	assert audio.ch == 2
 	assert audio.sr == 44100
 	
 def test_load_flac():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.flac")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.flac")
 	assert audio.title == "sample"
 	assert audio.size != 0
 	assert audio.ch == 2
 	assert audio.sr == 44100
 	
 def test_load_m4a():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.m4a")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.m4a")
 	assert audio.title == "sample"
 	assert audio.ch == 2
 	assert audio.sr == 44100
 	
 def test_load_mp3():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.mp3")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.mp3")
 	assert audio.title == "sample"
 	assert audio.size != 0
 	assert audio.ch == 2
 	assert audio.sr == 44100
 
 def test_load_opus():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.opus")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.opus")
 	assert audio.title == "sample"
 	assert audio.size != 0
 	assert audio.ch == 2
 	assert audio.sr == 48000
 
 def test_load_wav():
-	audio = ms.audio(this_dir / "testdata/audio-formats/sample.wav")
+	audio = ms.load_audio(this_dir / "testdata/audio-formats/sample.wav")
 	assert audio.title == "sample"
 	assert audio.size != 0
 	assert audio.ch == 2
