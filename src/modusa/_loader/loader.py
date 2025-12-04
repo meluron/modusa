@@ -1,8 +1,9 @@
-#---------------------------------
+# ---------------------------------
 # Author: Ankit Anand
-# Date: 02-12-2025
+# Date: 04-12-2025
 # Email: ankit0.anand0@gmail.com
-#---------------------------------
+# ---------------------------------
+
 
 import modusa as ms
 from pathlib import Path
@@ -12,9 +13,12 @@ import numpy as np
 import subprocess
 import imageio_ffmpeg as ffmpeg
 
-
-class MediaLoader:
-  """"""
+class Loader:
+  """
+  A class that provides APIs to instantiate 
+  modusa model classes like `ms.audio`, 
+  `ms.annotation`.
+  """
 
   def parse_sr_and_nchannels(audiofp):
       """
@@ -35,19 +39,31 @@ class MediaLoader:
         Number of channels (1 or 2)
       """
 
-      # Get the ffmpeg executable
+      # 04-12-2025 [Ankit Anand]: Extract the header of the audio file using FFMPEG console output.
       ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
-      
-      # Get the header text content from the audio file
       cmd = [ffmpeg_exe, "-i", str(audiofp)]
       proc = subprocess.run(cmd, stderr=subprocess.PIPE, text=True)
       header = proc.stderr
 
-      m = re.search(r'Audio:.*?(\d+)\s*Hz.*?(mono|stereo)', header) # "Stream #0:0: Audio: mp3, 44100 Hz, stereo, ..."
+      # 04-12-2025 [Ankit Anand]: Using regular expression to extract sr and channels from the header.
+      # "Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, mono, s16" for wav
+      # "Audio: mp3, 44100 Hz, stereo, ..." for mp3
+
+      m = re.search(r'Audio:.*?(\d+)\s*Hz.*?(mono|stereo)', header)
       if not m:
-          raise RuntimeError("Could not parse audio info")
+          raise RuntimeError("could not parse audio info from the header.\n{header}")
+      
       sr = int(m.group(1))
-      channels = 1 if m.group(2) == "mono" else 2
+
+      if m.group(2) == "mono": 
+        channels = 1
+      elif m.group(2) == "stereo": 
+        channels = 2
+      else: 
+        raise RuntimeError("could not find the channel info in the header.\n{header}")
+ 
+      if not (isinstance(sr, int) and isinstance(channels, int)):
+        raise ValueError(f"Invalid `sr` or `channels` type. Expected int but got `sr` as {type(sr)}) `channels` as {type(channels)} instead.")
       
       return sr, channels
   
@@ -69,59 +85,47 @@ class MediaLoader:
       Audio object with the content being loaded.
     """
 
-    #============================================
-    # I should raise an error if the audio file 
-    # does not exist
-    #============================================
     fp: Path = Path(fp)
     if not fp.exists(): raise FileExistsError(f"{fp} does not exist")
-    
-    #============================================
-    # I should parse the audio file header to get
-    # the original sr, ch to load the audio into.
-    #============================================
-    
-    #-------- Parse the sr and nchannels info from the header ---------
-    default_sr, default_nchannels = MediaLoader.parse_sr_and_nchannels(fp) # int, int
 
-    #-------- Use the parsed sr and nchannels if not explicitely passed by the user ---------
+    # 04-12-2025 [Ankit Anand]: Parse the sr and nchannels info from the header of the audio file and set the sr and ch to parsed values if not passed by user.
+    default_sr, default_nchannels = Loader.parse_sr_and_nchannels(fp) # int, int
     if sr is None: sr = default_sr
     if ch is None: ch = default_nchannels
-
-    #--------  I should check if the ch is valid (1, 2) ---------
-    if ch not in [1, 2]:
-      raise RuntimeError(f"'ch' must be either 1 or 2, got {ch} instead")
+    if ch not in [1, 2]: raise RuntimeError(f"'ch' must be either 1 or 2, got {ch} instead")
     
-    #============================================
+    # ============================================
+    # 04-12-2025 [Ankit Anand]
     # I should load the audio array using FFMPEG 
     # executatable
-    #============================================
+    # ============================================
 
     ffmpeg_exe = ffmpeg.get_ffmpeg_exe()
     
     cmd = [ffmpeg_exe]
-    cmd += ["-i", str(fp), "-f", "s16le", "-acodec", "pcm_s16le"]
-    cmd += ["-ar", str(sr)]
-    cmd += ["-ac", str(ch)]
-    cmd += ["-"]
+    cmd += ["-i", str(fp), "-f", "s16le", "-acodec", "pcm_s16le"] # -f: s16le => raw PCM audio, no headers, -acodec: pcm_s16le => encode as uncompressed standard quality 
+    cmd += ["-ar", str(sr)] # Setting the sampling rate to load the audio in.
+    cmd += ["-ac", str(ch)] # Setting the number of channels to load the audio in.
+    cmd += ["-"] # This tells ffmpeg to output the raw data into stdout that can be used to get the data without saving it.
+    
     
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     raw = proc.stdout.read()
     proc.wait()
     
+    # 04-12-2025 [Ankit Anand]: Convert the raw data into numpy array (normalized to have range between -1.0 and 1.0).
     audio = np.frombuffer(raw, np.int16).astype(np.float32) / 32768.0
     
-    #-------- Adjust the shape of the audio array to match the requirements of the Audio object ---------
-    if ch == 1:
-      audio = np.array([audio]) #  This is done to follow (#channels, #samples)
-    if ch == 2:
-      audio = audio.reshape(-1, 2).T
+    # 04-12-2025 [Ankit Anand]: Make sure that audio is 2D array. (#channels, #samples)
+    # For mono: (1, N) and for stereo: (2, N)
+    if ch == 1: audio = np.array([audio])
+    if ch == 2: audio = audio.reshape(-1, 2).T
 
-    return ms.audio(audio, sr, fp.stem)    
+    return ms.audio(audio, sr, fp.stem)
 
   def audacity_label(fp: Path|str):
     """
-    Loads audacity label text file as Annotation object.
+    Loads audacity label text file as ms.annotation object.
     
     Parameters
     ----------
@@ -130,31 +134,27 @@ class MediaLoader:
 
     Returns
     -------
-    Annotation
+    ms.annotation
       Loaded annotation object.
     """
-    #============================================
-    # I should raise error if the file does not
-    # exist.
-    #============================================
+
     fp: Path = Path(fp)
     if not fp.exists(): raise FileExistsError(f"{fp} does not exist.")
 
-    data: list = [] # To store the ctm in a list data structure
+    data: list = [] # To store [(start, end, label, confidence, group), ...]
 
-    #============================================
-    # I should now fill the data list from the 
-    # content in the file.
-    #============================================
-    # Open the txt file and read the content
     with open(str(fp), "r") as f:
-      lines = [line.rstrip("\n") for line in f]
+      lines = f.read().splitlines() # ["start end label", ...]
 
-    # Store the lines of the text file in the annotation format
     for line in lines:
+      # -- Ankit Anand on 04-12-2025 --
+      # 04-12-2025 [Ankit Anand]: Ignore empty lines before parsing.
+      if not line.strip():
+        continue
+
       start, end, label = line.split("\t")
       start, end = float(start), float(end)
-      data.append((start, end, label, None, None))
+      data.append((start, end, label, None, None)) # The last two entries (confidence, group) are set to None
     
     return ms.annotation(data)
 
@@ -169,40 +169,40 @@ class MediaLoader:
 
     Returns
     -------
-    Annotation
+    ms.annotation
       Loaded annotation object.
     """
-    #============================================
-    # I should raise error if the file does not
-    # exist.
-    #============================================
+
     fp: Path = Path(fp)
     if not fp.exists(): raise FileExistsError(f"{fp} does not exist.")
 
-    data: list = []
-    #============================================
-    # I should now fill the data from the content
-    # in the file.
-    #============================================
+    data: list = [] # To store [(start, end, label, confidence, group), ...]
+
     with open(str(fp), "r") as f:
-      content = f.read().splitlines()
+      lines = f.read().splitlines()
     
-    for c in content:
-      if not c.strip():
+    for line in lines:
+      # 04-12-2025 [Ankit Anand]: Ignore empty lines before parsing.
+      if not line.strip():
         continue
-        
-      parts = c.split()
+      
+      parts = line.split() # [utterance_id, channel, start, duration, label, confidence(optional)]
+
+      # 04-12-2025 [Ankit Anand]: Handle ctm files that do not have confidence score.
       if len(parts) == 5:
         segment_id, channel, start, dur, label = parts
         start, dur = float(start), float(dur)
         confidence = None
-          
+
+      # 04-12-2025 [Ankit Anand]: Handle ctm files that have confidence score.
       elif len(parts) == 6:
         segment_id, channel, start, dur, label, confidence = parts
         start, dur = float(start), float(dur)
         confidence = float(confidence)
+      
+      # 04-12-2025 [Ankit Anand]: Handle any anamolies in any of the lines of the ctm.
       else:
-        warnings.warn(f"'{c}' is not a standard ctm line.")
+        warnings.warn(f"'{line}' is not a standard ctm line <utterance_id channel start dur label confidence[optional]>.")
         continue
         
       data.append((start, start + dur, label, confidence, None))
@@ -211,7 +211,7 @@ class MediaLoader:
 
   def textgrid(fp: Path|str):
     """
-    Loads textgrid file as Annotation object.
+    Loads textgrid file as ms.annotation object.
     
     Parameters
     ----------
@@ -220,24 +220,18 @@ class MediaLoader:
 
     Returns
     -------
-    Annotation
+    ms.annotation
       Loaded annotation object.
     """
-    #============================================
-    # I should raise error if the file does not
-    # exist.
-    #============================================
+
     fp: Path = Path(fp)
     if not fp.exists(): raise FileExistsError(f"{fp} does not exist.")
 
-    data: list = []
-    #============================================
-    # I should now fill the data from the content
-    # in the file.
-    #============================================
+    data: list = []  # To store [(start, end, label, confidence, group), ...]
+
     with open(str(fp), "r") as f:
       lines = [line.strip() for line in f]
-        
+    
     in_interval = False
     s = e = None
     label = ""
@@ -261,6 +255,6 @@ class MediaLoader:
           # Finished reading an interval
           if label != "" and s is not None and e is not None:
             data.append((s, e, label, None, None))
-          in_interval = False  # ready for next interval
+          in_interval = False  # Ready for next interval
     
     return ms.annotation(data)

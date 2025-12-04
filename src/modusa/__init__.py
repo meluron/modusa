@@ -13,7 +13,7 @@ from ._models.image.image import Image as image
 #============================================
 # Modusa Models Loader
 #============================================
-from ._medialoader.medialoader import MediaLoader as load
+from ._loader.loader import Loader as load
 
 # Synthesizer
 from ._synthesizer.synthesizer import Synthesizer as synthesize
