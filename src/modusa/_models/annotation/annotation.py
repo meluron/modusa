@@ -230,7 +230,7 @@ class Annotation:
     # Filter out matches
     new_raw_ann = [
       (s, e, lbl, conf, grp)
-      for (s, e, lbl, conf, grp) in self._raw
+      for (s, e, lbl, conf, grp) in self.data
       if not pattern.search(lbl)
     ]
     
