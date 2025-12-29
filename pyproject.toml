@@ -28,6 +28,7 @@ path = "src/modusa/__init__.py"
 
 [dependency-groups]
 dev = [
+    "jupyter>=1.1.1",
     "pytest>=9.0.1",
     "twine>=6.2.0",
 ]

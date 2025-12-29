@@ -48,15 +48,10 @@ from ._visualizer._animator.animator import Animator as animate
 
 # Quick Plotter
 from ._visualizer._painter._quick_plotter import hill_plot
-
 #==========================================================
 
-# ============================================
-# 24-12-2025 [Ankit Anand]
-# Added BPMarker tool for boundary and prominence annotation in notebooks
-# ============================================
-from ._bpmarker import BPMarker as bpmarker
-
+# Tools
+import modusa.tools
 
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)

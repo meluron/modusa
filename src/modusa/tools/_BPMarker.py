@@ -1,5 +1,6 @@
 import ipywidgets as widgets
 from IPython.display import display
+from pathlib import Path
 
 class BPMarker:
     """
@@ -7,13 +8,14 @@ class BPMarker:
     prominence labels for each element (word) in a list.
 
     Boundary annotations support three possible values:
-    - 0: No boundary
-    - 1: Phrase boundary
-    - 2: Sentence boundary
+        - 0: No boundary
+        - 1: Phrase boundary
+        - 2: Sentence boundary
+
 
     Prominence annotations support two possible values:
-    - 0: Not prominent
-    - 1: Prominent
+        - 0: Not prominent
+        - 1: Prominent
 
     Although the tool is designed specifically for 
     boundary and prominence annotation, it can be adapted
@@ -125,16 +127,16 @@ class BPMarker:
             button.style.text_color = "red"
             button.style.font_weight = "bold"
 
-    def get_result(self):
+    def get_markings(self):
         """
-        Returns result in a user-friendly pythonic format.
-        list[tuple] [('word 1', 0, 1), ('word 2', 1, 0), ...]
+        Returns marking in a user-friendly pythonic format.
+        list[(label, boundary, prominence)] [('word 1', 0, 1), ('word 2', 1, 0), ...]
         """
 
         result: list[tuple] = []
 
         for i in range(len(self.data)):
-            result.append((str(self.data[i]), self.prominence_states[i], self.boundary_states[i]))
+            result.append((str(self.data[i]), self.boundary_states[i], self.prominence_states[i]))
         return result
 
     def display(self):
@@ -234,3 +236,26 @@ class BPMarker:
         )
         
         display(container)
+    
+    def save(self, path: str | Path, overwrite: bool = False):
+        """
+        Save the markings as a csv file.
+        """
+        path = Path(path)
+
+        # Ensure the parent directory exists to avoid FileNotFoundError
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        # 'x' mode fails if file exists; 'w' overwrites.
+        mode = "w" if overwrite else "x"
+
+        try:
+            with path.open(mode=mode, encoding="utf-8") as f:
+                f.write('Label,Boundary,Prominence\n')
+                for line in self.get_markings():
+                    label, boundary, prominence = line
+                    f.write(f"{label},{boundary},{prominence}\n")
+            print(f"Successfully saved to {path}")
+        except FileExistsError:
+            print(f"Error: The file '{path}' already exists and overwrite is set to False.")
+

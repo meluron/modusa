@@ -4,7 +4,6 @@
 # Email: ankit0.anand0@gmail.com
 #---------------------------------
 
-import pytest
 import modusa as ms
 from pathlib import Path
 
