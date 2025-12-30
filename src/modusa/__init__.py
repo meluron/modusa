@@ -56,5 +56,5 @@ import modusa.tools
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
-__version__ = "4.3.2" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
+__version__ = "4.4.2" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
 #====================
