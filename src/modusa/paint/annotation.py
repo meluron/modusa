@@ -62,7 +62,7 @@ def annotation(
     else:
         text_yloc = (ylim[1] + ylim[0]) / 2
         
-    for i, (start, end, label, confidence, group) in enumerate(ann):
+    for i, (utt_id, ch, start, end, label, confidence, group) in enumerate(ann):
         # We make sure that we only plot annotation that are within the x range of the current view
         if xlim is not None:
             if start >= xlim[1] or end <= xlim[0]:
