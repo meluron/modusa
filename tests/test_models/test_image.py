@@ -14,11 +14,11 @@ from pathlib import Path
 #============================================
 this_dir = Path(__file__).parents[1].resolve()
 def test_load_image_1():
-  img = ms.image(imagefp=this_dir / "testdata/images" / "1.png")
+  img = ms.load.image(imagefp=this_dir / "testdata/images" / "1.png")
   assert img.ndim == 3
   assert img.size != 0
 
 def test_load_image_2():
-  img = ms.image(imagefp=this_dir / "testdata/images" / "2.png")
+  img = ms.load.image(imagefp=this_dir / "testdata/images" / "2.png")
   assert img.ndim == 3
   assert img.size != 0

@@ -13,7 +13,7 @@ data = [(1, 2, "Label 1", None, None), (5, 6, "Label 2", 0.5, 1)]
 
 # Test loading annotation object from different sources
 def test_load_audacity_txt():
-	ann = ms.load.audacity_label(this_dir / "testdata/annotations/sample3.txt")
+	ann = ms.load.audacity_labels(this_dir / "testdata/annotations/sample3.txt")
 
 def test_load_ctm_with_5_cols():
 	# This has 5 columns (no confidence column)
@@ -27,15 +27,15 @@ def test_load_textgrid():
 	pass
 
 def test_load_raw():
-	ann = ms.annotation(data)
+	ann = ms.models.annotation(data)
 
 def test_load_empty():
-	ann = ms.annotation([])
+	ann = ms.models.annotation([])
 
 def test_get_item():
-	ann = ms.annotation(data=data)
+	ann = ms.models.annotation(data=data)
 	assert ann[0] == data[0]
 
 def test_len():
-	ann = ms.annotation(data=data)
+	ann = ms.models.annotation(data=data)
 	assert len(ann) == ann.size == 2
