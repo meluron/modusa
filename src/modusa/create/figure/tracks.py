@@ -1,4 +1,5 @@
 from ._sharedutils import generate_abc, load_devanagari_font
+import modusa as ms
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -126,20 +127,20 @@ def tracks(
     # Configure the styling
     if ylims is not None:
         for (ylim, ax) in zip(ylims, axs[:,0]):
-            set.limit(ax, ylim=ylim)
+            ms.set.view.limit(ax, ylim=ylim)
     if xlim is not None:
-        set.limit(axs[0,0], xlim=xlim)
+        ms.set.view.limit(axs[0,0], xlim=xlim)
     if ylabels is not None:
         for (ylabel, ax) in zip(ylabels, axs[:,0]):
-            set.label(ax, ylabel=ylabel)
+            ms.set.view.label(ax, ylabel=ylabel)
     if xlabels is not None:
         for (xlabel, ax) in zip(xlabels, axs[:,0]):
-            set.label(ax, xlabel=xlabel)
+            ms.set.view.label(ax, xlabel=xlabel)
     if titles is not None:
         for (title, ax) in zip(titles, axs[:,0]):
-            set.title(ax, title=title)
+            ms.set.view.title(ax, title=title)
     if grid is True:
         for ax in axs[:,0]:
-            set.gridlines(ax, x=True, y=True)
+            ms.set.view.gridlines(ax, x=True, y=True)
         
     return fig, axs

@@ -1,4 +1,4 @@
-from modusa import set
+import modusa as ms
 from ._sharedutils import generate_abc, load_devanagari_font
 
 import matplotlib.pyplot as plt
@@ -101,25 +101,25 @@ def collage(
 
     if ylims is not None:
         for ylim, ax in zip(ylims, axs_flat):
-            set.view.limit(ax, ylim=ylim)
+            ms.set.view.limit(ax, ylim=ylim)
     if xlims is not None:
         for xlim, ax in zip(xlims, axs_flat):
-            set.limit(ax, xlim=xlim)
+            ms.set.limit(ax, xlim=xlim)
     if ylabels is not None:
         for ylabel, ax in zip(ylabels, axs_flat):
-            set.label(ax, ylabel=ylabel)
+            ms.set.label(ax, ylabel=ylabel)
     if xlabels is not None:
         for xlabel, ax in zip(xlabels, axs_flat):
-            set.label(ax, xlabel=xlabel)
+            ms.set.label(ax, xlabel=xlabel)
     if titles is not None:
         for title, ax in zip(titles, axs_flat):
-            set.title(ax, title=title)
+            ms.set.title(ax, title=title)
 
     if grid:
         for ax in axs_flat:
-            set.gridlines(ax, x=True, y=True)
+            ms.set.view.gridlines(ax, x=True, y=True)
     if remove_ticks:
         for ax in axs_flat:
-            set.ticks(ax, left=False, bottom=False)
+            ms.set.view.ticks(ax, left=False, bottom=False)
 
     return fig, axs
