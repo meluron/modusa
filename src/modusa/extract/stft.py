@@ -31,60 +31,38 @@ def stft(y, sr, winlen=None, hoplen=None, gamma=None):
       Timeframes in sec.
     """
     
-    #============================================
-    # Setup the STFT params if not explicitely 
-    # passed by the user.
-    # window length = 0.064 sec 
-    # hop length = 25 % of the window length
-    #============================================
+    # Parameter Setup
     if winlen is None:
-      winlen = 2 ** int(np.log2(0.064 * sr))
+        winlen = 2 ** int(np.log2(0.064 * sr))
     if hoplen is None:
-      hoplen = int(winlen * 0.25)
-        
-    #============================================
-    # I should initialize an empty array to hold 
-    # the spectrogram matrix.
-    #============================================
+        hoplen = int(winlen * 0.25)
 
-    #-------- Estimate the expected shape of the spectrogram matrix ---------
-    M = int(np.ceil(winlen / 2))
-    N = int(np.ceil((y.size - winlen) / hoplen))
+    # Padding (Centering the windows)
+    # Pad with zeros so the first frame is centered at t=0
+    y_padded = np.pad(y, pad_width=winlen // 2, mode='constant')
 
-    #-------- Instantiate the matrix (M, N) => (#freq bins, #time frames) ---------
-    S = np.empty((M, N), dtype=np.complex64)
+    # Create Frames
+    # Use sliding_window_view to create the frames
+    frames = np.lib.stride_tricks.sliding_window_view(y_padded, window_shape=winlen)[::hoplen]
     
-    #============================================
-    # I should apply window on the input
-    # signal using hanning window which is usually 
-    # the default choice.
-    #============================================
-    
+    # Apply Window
     hann = np.hanning(winlen)
-
-    #-------- I am using sliding_window_view for efficiency as it creates only a view and not a new numpy array. ---------
-    frames = np.lib.stride_tricks.sliding_window_view(y, window_shape=winlen)[::hoplen] # frame X chunk
-  
-    frames_windowed = frames * hann # frame X chunk
+    frames_windowed = frames * hann
     
-    #============================================
-    # I want to compute the fft on the framed 
-    # windowed signal to get the spectrogram.
-    #============================================
-
-    #-------- rfft is used instead of fft because the signal is assumed to be real-valued like audio signal. ---------
-    #-------- Transposition is done to have the S matrix in used to format (#freq bins, #time frames). ---------
-    S = np.fft.rfft(frames_windowed, n=winlen, axis=1).T 
+    # Compute RFFT
+    # We don't need to pre-allocate S; rfft creates it efficiently
+    # Result shape: (number_of_frames, (winlen // 2) + 1)
+    S = np.fft.rfft(frames_windowed, n=winlen, axis=-1).T 
     
-    #-------- I then compute the corresponding freq bin -> freq (Hz) mapping, time frame -> time (sec) mapping. ---------
-    Sf = np.fft.rfftfreq(winlen, d=1/sr) # Frequency bins (Hz)
-    St = np.arange(N) * hoplen / sr # Time bins (sec)
+    # Generate Mappings
+    # Sf: frequency of each row in Hz
+    # St: time of each column in seconds
+    Sf = np.fft.rfftfreq(winlen, d=1/sr)
+    num_frames = S.shape[1]
+    St = np.arange(num_frames) * hoplen / sr
     
-    #============================================
-    # I apply log-compression to enhance the
-    # contrast of the spectrogram.
-    #============================================
+    # Log Compression
     if gamma is not None:
-      S = np.log1p(gamma * np.abs(S))
+        S = np.log1p(gamma * np.abs(S))
         
     return S, Sf, St

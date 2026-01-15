@@ -83,7 +83,7 @@ class Annotation:
         raw_ann = [
             (uttid, channel, start, end, label, confidence, group)
             for (uttid, channel, start, end, label, confidence, group) in self.data
-            if start >= from_ and end <= to_
+            if float(start) >= from_ and float(end) <= to_
         ]
 
         return Annotation(raw_ann)
@@ -121,8 +121,8 @@ class Annotation:
             )
 
         new_raw_ann = [
-            (start, end, label, confidence, group)
-            for (start, end, label, confidence, group) in self.data
+            (uttid, ch, start, end, label, confidence, group_num)
+            for (uttid, ch, start, end, label, confidence, group_num) in self.data
             if regex_pattern.search(label)
         ]
 
@@ -227,7 +227,7 @@ class Annotation:
             )
 
         new_raw_ann = [
-            (str(uid), int(ch), float(s), float(e), str(lbl), float(conf), int(grp))
+            (uid, ch, s, e, lbl, conf, grp)
             for (uid, ch, s, e, lbl, conf, grp) in self.data
             if not pattern.search(lbl)
         ]
