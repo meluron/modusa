@@ -34,5 +34,5 @@ from . import set
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
-__version__ = "5.0.3" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
+__version__ = "5.0.4" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
 #====================
