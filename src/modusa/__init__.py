@@ -10,8 +10,8 @@ from . import play
 # Media recorder
 from . import record
 
-# Feature extractor
-from . import extract
+# Feature computer
+from . import compute
 
 # Saver
 from . import save
@@ -34,5 +34,5 @@ from . import set
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
-__version__ = "5.0.4" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
+__version__ = "6.0.4" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
 #====================
