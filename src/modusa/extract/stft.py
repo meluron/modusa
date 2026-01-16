@@ -1,6 +1,6 @@
 import numpy as np
 
-def stft(y, sr, winlen=None, hoplen=None, gamma=None):
+def stft(y, sr, winlen=None, hoplen=None):
     """
     Compute spectrogram using only numpy.
 
@@ -16,53 +16,41 @@ def stft(y, sr, winlen=None, hoplen=None, gamma=None):
     hoplen: int
       Hop length in samples.
       Default: None => set at one-forth of winlen
-    gamma: int | None
-      Log compression factor.
-      Add contrast to the plot.
-      Default: None
 
     Returns
     -------
     ndarray:
-      Spectrogram matrix, complex is gamma is None else real
+      Spectrogram matrix
     ndarray:
       Frequency bins in Hz.
     ndarray:
       Timeframes in sec.
     """
     
-    # Parameter Setup
-    if winlen is None:
-        winlen = 2 ** int(np.log2(0.064 * sr))
-    if hoplen is None:
-        hoplen = int(winlen * 0.25)
+    # Format input
+    y = np.ascontiguousarray(y, dtype=np.float32)
+    
+    # Manual Periodic Hann Window (Matches scipy.signal.get_window('hann', fftbins=True))
+    n = np.arange(winlen)
+    window = (0.5 - 0.5 * np.cos(2.0 * np.pi * n / winlen)).astype(np.float32)
+    
+    # Padding (Reflect) - Centers the window at y[0]
+    pad_width = winlen // 2
+    y_padded = np.pad(y, pad_width=pad_width, mode='constant')
+    
+    # Efficient Framing
+    all_frames = np.lib.stride_tricks.sliding_window_view(y_padded, window_shape=winlen)[::hoplen]
+    
+    # Boundary Calculation (Librosa standard)
+    n_frames = 1 + (len(y_padded) - winlen) // hoplen
+    frames = all_frames[:n_frames]
+    
+    # Windowing and FFT
+    # Result is transposed to (Frequency, Time)
+    S = np.fft.rfft(frames * window, n=winlen, axis=-1).T
 
-    # Padding (Centering the windows)
-    # Pad with zeros so the first frame is centered at t=0
-    y_padded = np.pad(y, pad_width=winlen // 2, mode='constant')
-
-    # Create Frames
-    # Use sliding_window_view to create the frames
-    frames = np.lib.stride_tricks.sliding_window_view(y_padded, window_shape=winlen)[::hoplen]
+    # Axis Bins
+    freqs = np.fft.rfftfreq(winlen, d=1/sr)
+    times = np.arange(S.shape[1]) * (hoplen / sr)
     
-    # Apply Window
-    hann = np.hanning(winlen)
-    frames_windowed = frames * hann
-    
-    # Compute RFFT
-    # We don't need to pre-allocate S; rfft creates it efficiently
-    # Result shape: (number_of_frames, (winlen // 2) + 1)
-    S = np.fft.rfft(frames_windowed, n=winlen, axis=-1).T 
-    
-    # Generate Mappings
-    # Sf: frequency of each row in Hz
-    # St: time of each column in seconds
-    Sf = np.fft.rfftfreq(winlen, d=1/sr)
-    num_frames = S.shape[1]
-    St = np.arange(num_frames) * hoplen / sr
-    
-    # Log Compression
-    if gamma is not None:
-        S = np.log1p(gamma * np.abs(S))
-        
-    return S, Sf, St
+    return S, freqs, times
