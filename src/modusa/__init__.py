@@ -31,6 +31,9 @@ from . import paint
 # Setter
 from . import set
 
+# Converter
+from . import convert
+
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
