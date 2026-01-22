@@ -233,3 +233,15 @@ class Annotation:
         ]
 
         return Annotation(new_raw_ann)
+    
+    def get_labels(self, delimiter=" "):
+        """
+        
+        """
+        labels = ""
+
+        for (_, _, _, _, lbl, _, _) in self.data:
+            labels += lbl
+            labels += delimiter
+        
+        return labels[:-1] # Remove last space before returning
