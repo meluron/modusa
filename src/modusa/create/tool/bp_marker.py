@@ -47,7 +47,7 @@ class BPMarker:
 
         # If user passes a csv file (Label, Boundary, Prominence columns)
         # This is like loading an already marked file, good for editing
-        elif isinstance(args[0], str):
+        elif isinstance(args[0], str) or isinstance(args[0], Path):
             csv_fp = Path(args[0])
             with csv_fp.open(mode="r", encoding="utf-8") as f:
                 content = csv.reader(f)
