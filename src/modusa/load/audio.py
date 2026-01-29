@@ -34,7 +34,6 @@ def audio(audiofp: str, sr: int|None = None, ch: int|None = None) -> tuple[np.nd
     # 04-12-2025 [Ankit Anand]: Parse the sr and nchannels info from the header of the audio file and set the sr and ch to parsed values if not passed by user.
     if sr is None or ch is None:
         header_info: dict = probe.audio(audiofp)
-        print("Inside")
     if sr is None: sr = header_info['sr']
     if ch is None: ch = 2 if header_info['ch'] == "stereo" else 1
     

@@ -37,5 +37,5 @@ from . import convert
 #====================
 # RELEASE VERSION (MAJOR.MINOR.PATCH)
 
-__version__ = "6.2.6" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
+__version__ = "6.2.7" # This is dynamically used by the documentation, and pyproject.toml; Only need to change it here; rest gets taken care of.
 #====================
