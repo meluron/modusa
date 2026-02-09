@@ -1,1 +1,1 @@
-from .bp_marker import BPMarker as bp_marker
+from .wg_marker import WGMarker as wg_marker
